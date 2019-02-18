@@ -98,6 +98,15 @@ public final class Preprocessors {
 	}
 
 	/**
+	 * Returns a {@code HeadersModifyingOperationPreprocessor} that can then be configured
+	 * to modify the headers of the request or response.
+	 * @return the preprocessor
+	 */
+	public static HeadersModifyingOperationPreprocessor modifyHeaders() {
+		return new HeadersModifyingOperationPreprocessor();
+	}
+
+	/**
 	 * Returns an {@code OperationPreprocessor} that will mask the href of hypermedia
 	 * links in the request or response.
 	 * @return the preprocessor
