@@ -16,20 +16,20 @@
 
 package org.springframework.restdocs.operation.preprocess;
 
-import org.springframework.util.Assert;
-import org.springframework.util.MultiValueMap;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import org.springframework.util.Assert;
+import org.springframework.util.MultiValueMap;
 
 /**
  * An {@link OperationPreprocessorAdapter} that supports modification of {@link T}.
  *
  * @param <S> the concrete type of this preprocessor, to be returned from methods that
  * support chaining
- * @param <T> the type of object to which the modification applies
+ * @param <T> the type to which the modification applies
  * @author Andy Wilkinson
  * @author Jihun Cha
  * @see ParametersModifyingOperationPreprocessor
@@ -110,7 +110,7 @@ abstract class MultiValueMapModifyingOperationPreprocessorAdapter<S extends Mult
 	/**
 	 * A {@code Modification} is used to apply the modification to {@link T}.
 	 *
-	 * @param <T> the type of object to which the modification applies
+	 * @param <T> the type to which the modification applies
 	 */
 	interface Modification<T extends MultiValueMap<String, String>> {
 

@@ -16,18 +16,22 @@
 
 package org.springframework.restdocs.operation.preprocess;
 
-import org.junit.Test;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.restdocs.operation.OperationRequest;
-import org.springframework.restdocs.operation.OperationRequestFactory;
-import org.springframework.restdocs.operation.OperationRequestPart;
-import org.springframework.restdocs.operation.Parameters;
-
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.regex.Pattern;
+
+import org.junit.Test;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.restdocs.operation.OperationRequest;
+import org.springframework.restdocs.operation.OperationRequestFactory;
+import org.springframework.restdocs.operation.OperationRequestPart;
+import org.springframework.restdocs.operation.OperationResponse;
+import org.springframework.restdocs.operation.OperationResponseFactory;
+import org.springframework.restdocs.operation.Parameters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,49 +48,67 @@ public class HeadersModifyingOperationPreprocessorTests {
 	@Test
 	public void addNewHeader() {
 		HttpHeaders headers = new HttpHeaders();
-		assertThat(this.preprocessor.add("a", "alpha").preprocess(createRequest(headers))
-				.getHeaders()).containsEntry("a", Arrays.asList("alpha"));
+		OperationPreprocessor preprocessor = this.preprocessor.add("a", "alpha");
+		assertThat(preprocessor.preprocess(createRequest(headers)).getHeaders())
+				.containsEntry("a", Arrays.asList("alpha"));
+		assertThat(preprocessor.preprocess(createResponse(headers)).getHeaders())
+				.containsEntry("a", Arrays.asList("alpha"));
 	}
 
 	@Test
 	public void addValueToExistingHeader() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("a", "apple");
-		assertThat(this.preprocessor.add("a", "alpha").preprocess(createRequest(headers))
-				.getHeaders()).containsEntry("a", Arrays.asList("apple", "alpha"));
+		OperationPreprocessor preprocessor = this.preprocessor.add("a", "alpha");
+		assertThat(preprocessor.preprocess(createRequest(headers)).getHeaders())
+				.containsEntry("a", Arrays.asList("apple", "alpha"));
+		assertThat(preprocessor.preprocess(createResponse(headers)).getHeaders())
+				.containsEntry("a", Arrays.asList("apple", "alpha"));
 	}
 
 	@Test
 	public void setNewHeader() {
 		HttpHeaders headers = new HttpHeaders();
-		assertThat(this.preprocessor.set("a", "alpha", "avocado")
-				.preprocess(createRequest(headers)).getHeaders()).containsEntry("a",
-						Arrays.asList("alpha", "avocado"));
+		OperationPreprocessor preprocessor = this.preprocessor.set("a", "alpha",
+				"avocado");
+		assertThat(preprocessor.preprocess(createRequest(headers)).getHeaders())
+				.containsEntry("a", Arrays.asList("alpha", "avocado"));
+		assertThat(preprocessor.preprocess(createResponse(headers)).getHeaders())
+				.containsEntry("a", Arrays.asList("alpha", "avocado"));
 	}
 
 	@Test
 	public void setExistingHeader() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("a", "apple");
-		assertThat(this.preprocessor.set("a", "alpha", "avocado")
-				.preprocess(createRequest(headers)).getHeaders()).containsEntry("a",
-						Arrays.asList("alpha", "avocado"));
+		OperationPreprocessor preprocessor = this.preprocessor.set("a", "alpha",
+				"avocado");
+		assertThat(preprocessor.preprocess(createRequest(headers)).getHeaders())
+				.containsEntry("a", Arrays.asList("alpha", "avocado"));
+		assertThat(preprocessor.preprocess(createResponse(headers)).getHeaders())
+				.containsEntry("a", Arrays.asList("alpha", "avocado"));
 	}
 
 	@Test
 	public void removeNonExistentHeader() {
 		HttpHeaders headers = new HttpHeaders();
-		assertThat(this.preprocessor.remove("a").preprocess(createRequest(headers))
-				.getHeaders().size()).isEqualTo(1);
+		OperationPreprocessor preprocessor = this.preprocessor.remove("a");
+		assertThat(preprocessor.preprocess(createRequest(headers)).getHeaders().size())
+				.isEqualTo(1);
+		assertThat(preprocessor.preprocess(createResponse(headers)).getHeaders().size())
+				.isEqualTo(0);
 	}
 
 	@Test
 	public void removeHeader() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("a", "apple");
-		assertThat(this.preprocessor.set("a", "alpha", "avocado")
-				.preprocess(createRequest(headers)).getHeaders()).containsEntry("a",
-						Arrays.asList("alpha", "avocado"));
+		OperationPreprocessor preprocessor = this.preprocessor.set("a", "alpha",
+				"avocado");
+		assertThat(preprocessor.preprocess(createRequest(headers)).getHeaders())
+				.containsEntry("a", Arrays.asList("alpha", "avocado"));
+		assertThat(preprocessor.preprocess(createResponse(headers)).getHeaders())
+				.containsEntry("a", Arrays.asList("alpha", "avocado"));
 	}
 
 	@Test
@@ -96,15 +118,22 @@ public class HeadersModifyingOperationPreprocessorTests {
 		headers.add("alpha", "alpha");
 		headers.add("avocado", "avocado");
 		headers.add("bravo", "bravo");
-		assertThat(this.preprocessor.remove(Pattern.compile("^a.*"))
-				.preprocess(createRequest(headers)).getHeaders().size()).isEqualTo(2);
+		OperationPreprocessor preprocessor = this.preprocessor
+				.remove(Pattern.compile("^a.*"));
+		assertThat(preprocessor.preprocess(createRequest(headers)).getHeaders().size())
+				.isEqualTo(2);
+		assertThat(preprocessor.preprocess(createResponse(headers)).getHeaders().size())
+				.isEqualTo(1);
 	}
 
 	@Test
 	public void removeHeaderValueForNonExistentHeader() {
 		HttpHeaders headers = new HttpHeaders();
-		assertThat(this.preprocessor.remove("a", "apple")
-				.preprocess(createRequest(headers)).getHeaders().size()).isEqualTo(1);
+		OperationPreprocessor preprocessor = this.preprocessor.remove("a", "apple");
+		assertThat(preprocessor.preprocess(createRequest(headers)).getHeaders().size())
+				.isEqualTo(1);
+		assertThat(preprocessor.preprocess(createResponse(headers)).getHeaders().size())
+				.isEqualTo(0);
 	}
 
 	@Test
@@ -112,23 +141,32 @@ public class HeadersModifyingOperationPreprocessorTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("a", "apple");
 		headers.add("a", "alpha");
-		assertThat(this.preprocessor.remove("a", "apple")
-				.preprocess(createRequest(headers)).getHeaders()).containsEntry("a",
-						Arrays.asList("alpha"));
+		OperationPreprocessor preprocessor = this.preprocessor.remove("a", "apple");
+		assertThat(preprocessor.preprocess(createRequest(headers)).getHeaders())
+				.containsEntry("a", Arrays.asList("alpha"));
+		assertThat(preprocessor.preprocess(createResponse(headers)).getHeaders())
+				.containsEntry("a", Arrays.asList("alpha"));
 	}
 
 	@Test
 	public void removeHeaderValueWithSingleValueRemovesEntryEntirely() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("a", "apple");
-		assertThat(this.preprocessor.remove("a", "apple")
-				.preprocess(createRequest(headers)).getHeaders().size()).isEqualTo(1);
+		OperationPreprocessor preprocessor = this.preprocessor.remove("a", "apple");
+		assertThat(preprocessor.preprocess(createRequest(headers)).getHeaders().size())
+				.isEqualTo(1);
+		assertThat(preprocessor.preprocess(createResponse(headers)).getHeaders().size())
+				.isEqualTo(0);
 	}
 
 	private OperationRequest createRequest(HttpHeaders headers) {
 		return new OperationRequestFactory().create(URI.create("http://localhost:8080"),
 				HttpMethod.GET, new byte[0], headers, new Parameters(),
 				Collections.<OperationRequestPart>emptyList());
+	}
+
+	private OperationResponse createResponse(HttpHeaders headers) {
+		return new OperationResponseFactory().create(HttpStatus.OK, headers, new byte[0]);
 	}
 
 }
