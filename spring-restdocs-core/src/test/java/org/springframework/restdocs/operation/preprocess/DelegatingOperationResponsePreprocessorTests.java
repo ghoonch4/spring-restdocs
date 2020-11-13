@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,16 +43,12 @@ public class DelegatingOperationResponsePreprocessorTests {
 		OperationPreprocessor preprocessor3 = mock(OperationPreprocessor.class);
 		OperationResponse preprocessedResponse3 = mock(OperationResponse.class);
 
-		given(preprocessor1.preprocess(originalResponse))
-				.willReturn(preprocessedResponse1);
-		given(preprocessor2.preprocess(preprocessedResponse1))
-				.willReturn(preprocessedResponse2);
-		given(preprocessor3.preprocess(preprocessedResponse2))
-				.willReturn(preprocessedResponse3);
+		given(preprocessor1.preprocess(originalResponse)).willReturn(preprocessedResponse1);
+		given(preprocessor2.preprocess(preprocessedResponse1)).willReturn(preprocessedResponse2);
+		given(preprocessor3.preprocess(preprocessedResponse2)).willReturn(preprocessedResponse3);
 
 		OperationResponse result = new DelegatingOperationResponsePreprocessor(
-				Arrays.asList(preprocessor1, preprocessor2, preprocessor3))
-						.preprocess(originalResponse);
+				Arrays.asList(preprocessor1, preprocessor2, preprocessor3)).preprocess(originalResponse);
 
 		assertThat(result).isSameAs(preprocessedResponse3);
 	}

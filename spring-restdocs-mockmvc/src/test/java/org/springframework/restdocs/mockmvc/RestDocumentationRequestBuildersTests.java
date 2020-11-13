@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -51,7 +51,7 @@ public class RestDocumentationRequestBuildersTests {
 
 	@Test
 	public void getTemplate() {
-		assertTemplate(get("{template}", "t"), HttpMethod.GET);
+		assertTemplate(get("/{template}", "t"), HttpMethod.GET);
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class RestDocumentationRequestBuildersTests {
 
 	@Test
 	public void postTemplate() {
-		assertTemplate(post("{template}", "t"), HttpMethod.POST);
+		assertTemplate(post("/{template}", "t"), HttpMethod.POST);
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class RestDocumentationRequestBuildersTests {
 
 	@Test
 	public void putTemplate() {
-		assertTemplate(put("{template}", "t"), HttpMethod.PUT);
+		assertTemplate(put("/{template}", "t"), HttpMethod.PUT);
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class RestDocumentationRequestBuildersTests {
 
 	@Test
 	public void patchTemplate() {
-		assertTemplate(patch("{template}", "t"), HttpMethod.PATCH);
+		assertTemplate(patch("/{template}", "t"), HttpMethod.PATCH);
 	}
 
 	@Test
@@ -91,7 +91,7 @@ public class RestDocumentationRequestBuildersTests {
 
 	@Test
 	public void deleteTemplate() {
-		assertTemplate(delete("{template}", "t"), HttpMethod.DELETE);
+		assertTemplate(delete("/{template}", "t"), HttpMethod.DELETE);
 	}
 
 	@Test
@@ -101,7 +101,7 @@ public class RestDocumentationRequestBuildersTests {
 
 	@Test
 	public void optionsTemplate() {
-		assertTemplate(options("{template}", "t"), HttpMethod.OPTIONS);
+		assertTemplate(options("/{template}", "t"), HttpMethod.OPTIONS);
 	}
 
 	@Test
@@ -111,7 +111,7 @@ public class RestDocumentationRequestBuildersTests {
 
 	@Test
 	public void headTemplate() {
-		assertTemplate(head("{template}", "t"), HttpMethod.HEAD);
+		assertTemplate(head("/{template}", "t"), HttpMethod.HEAD);
 	}
 
 	@Test
@@ -121,7 +121,7 @@ public class RestDocumentationRequestBuildersTests {
 
 	@Test
 	public void requestTemplate() {
-		assertTemplate(request(HttpMethod.GET, "{template}", "t"), HttpMethod.GET);
+		assertTemplate(request(HttpMethod.GET, "/{template}", "t"), HttpMethod.GET);
 	}
 
 	@Test
@@ -131,7 +131,7 @@ public class RestDocumentationRequestBuildersTests {
 
 	@Test
 	public void fileUploadTemplate() {
-		assertTemplate(fileUpload("{template}", "t"), HttpMethod.POST);
+		assertTemplate(fileUpload("/{template}", "t"), HttpMethod.POST);
 	}
 
 	@Test
@@ -139,13 +139,11 @@ public class RestDocumentationRequestBuildersTests {
 		assertUri(fileUpload(URI.create("/uri")), HttpMethod.POST);
 	}
 
-	private void assertTemplate(MockHttpServletRequestBuilder builder,
-			HttpMethod httpMethod) {
+	private void assertTemplate(MockHttpServletRequestBuilder builder, HttpMethod httpMethod) {
 		MockHttpServletRequest request = builder.buildRequest(this.servletContext);
-		assertThat((String) request
-				.getAttribute(RestDocumentationGenerator.ATTRIBUTE_NAME_URL_TEMPLATE))
-						.isEqualTo("{template}");
-		assertThat(request.getRequestURI()).isEqualTo("t");
+		assertThat((String) request.getAttribute(RestDocumentationGenerator.ATTRIBUTE_NAME_URL_TEMPLATE))
+				.isEqualTo("/{template}");
+		assertThat(request.getRequestURI()).isEqualTo("/t");
 		assertThat(request.getMethod()).isEqualTo(httpMethod.name());
 	}
 

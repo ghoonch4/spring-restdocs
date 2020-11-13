@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,6 +29,7 @@ import org.springframework.restdocs.RestDocumentationContext;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.config.RestDocumentationConfigurer;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -45,8 +46,7 @@ public class WebTestClientRestDocumentationConfigurer extends
 		RestDocumentationConfigurer<WebTestClientSnippetConfigurer, WebTestClientOperationPreprocessorsConfigurer, WebTestClientRestDocumentationConfigurer>
 		implements ExchangeFilterFunction {
 
-	private final WebTestClientSnippetConfigurer snippetConfigurer = new WebTestClientSnippetConfigurer(
-			this);
+	private final WebTestClientSnippetConfigurer snippetConfigurer = new WebTestClientSnippetConfigurer(this);
 
 	private static final Map<String, Map<String, Object>> configurations = new ConcurrentHashMap<>();
 
@@ -55,8 +55,7 @@ public class WebTestClientRestDocumentationConfigurer extends
 
 	private final RestDocumentationContextProvider contextProvider;
 
-	WebTestClientRestDocumentationConfigurer(
-			RestDocumentationContextProvider contextProvider) {
+	WebTestClientRestDocumentationConfigurer(RestDocumentationContextProvider contextProvider) {
 		this.contextProvider = contextProvider;
 	}
 
@@ -80,7 +79,10 @@ public class WebTestClientRestDocumentationConfigurer extends
 
 	static Map<String, Object> retrieveConfiguration(HttpHeaders headers) {
 		String requestId = headers.getFirst(WebTestClient.WEBTESTCLIENT_REQUEST_ID);
-		return configurations.remove(requestId);
+		Map<String, Object> configuration = configurations.remove(requestId);
+		Assert.state(configuration != null, () -> "REST Docs configuration not found. Did you forget to register a "
+				+ WebTestClientRestDocumentationConfigurer.class.getSimpleName() + " as a filter?");
+		return configuration;
 	}
 
 	@Override
@@ -96,9 +98,8 @@ public class WebTestClientRestDocumentationConfigurer extends
 			return request;
 		}
 		try {
-			requestUri = new URI("http", requestUri.getUserInfo(), "localhost", 8080,
-					requestUri.getPath(), requestUri.getQuery(),
-					requestUri.getFragment());
+			requestUri = new URI("http", requestUri.getUserInfo(), "localhost", 8080, requestUri.getPath(),
+					requestUri.getQuery(), requestUri.getFragment());
 			return ClientRequest.from(request).url(requestUri).build();
 		}
 		catch (URISyntaxException ex) {

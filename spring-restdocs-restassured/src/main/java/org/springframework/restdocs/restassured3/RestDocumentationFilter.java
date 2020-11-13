@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -42,8 +42,7 @@ public class RestDocumentationFilter implements Filter {
 
 	private final RestDocumentationGenerator<FilterableRequestSpecification, Response> delegate;
 
-	RestDocumentationFilter(
-			RestDocumentationGenerator<FilterableRequestSpecification, Response> delegate) {
+	RestDocumentationFilter(RestDocumentationGenerator<FilterableRequestSpecification, Response> delegate) {
 		Assert.notNull(delegate, "delegate must be non-null");
 		this.delegate = delegate;
 	}
@@ -67,15 +66,11 @@ public class RestDocumentationFilter implements Filter {
 	 * @param context the filter context
 	 * @return the configuration
 	 */
-	protected Map<String, Object> getConfiguration(
-			FilterableRequestSpecification requestSpec, FilterContext context) {
-		Map<String, Object> configuration = new HashMap<>(
-				context.<Map<String, Object>>getValue(CONTEXT_KEY_CONFIGURATION));
+	protected Map<String, Object> getConfiguration(FilterableRequestSpecification requestSpec, FilterContext context) {
+		Map<String, Object> configuration = new HashMap<>(retrieveConfiguration(context));
 		configuration.put(RestDocumentationContext.class.getName(),
-				context.<RestDocumentationContext>getValue(
-						RestDocumentationContext.class.getName()));
-		configuration.put(RestDocumentationGenerator.ATTRIBUTE_NAME_URL_TEMPLATE,
-				requestSpec.getUserDefinedPath());
+				context.<RestDocumentationContext>getValue(RestDocumentationContext.class.getName()));
+		configuration.put(RestDocumentationGenerator.ATTRIBUTE_NAME_URL_TEMPLATE, requestSpec.getUserDefinedPath());
 		return configuration;
 	}
 
@@ -89,20 +84,25 @@ public class RestDocumentationFilter implements Filter {
 		return new RestDocumentationFilter(this.delegate.withSnippets(snippets)) {
 
 			@Override
-			protected Map<String, Object> getConfiguration(
-					FilterableRequestSpecification requestSpec, FilterContext context) {
-				Map<String, Object> configuration = super.getConfiguration(requestSpec,
-						context);
-				configuration.remove(
-						RestDocumentationGenerator.ATTRIBUTE_NAME_DEFAULT_SNIPPETS);
-				configuration.remove(
-						RestDocumentationGenerator.ATTRIBUTE_NAME_DEFAULT_OPERATION_REQUEST_PREPROCESSOR);
-				configuration.remove(
-						RestDocumentationGenerator.ATTRIBUTE_NAME_DEFAULT_OPERATION_RESPONSE_PREPROCESSOR);
+			protected Map<String, Object> getConfiguration(FilterableRequestSpecification requestSpec,
+					FilterContext context) {
+				Map<String, Object> configuration = super.getConfiguration(requestSpec, context);
+				configuration.remove(RestDocumentationGenerator.ATTRIBUTE_NAME_DEFAULT_SNIPPETS);
+				configuration.remove(RestDocumentationGenerator.ATTRIBUTE_NAME_DEFAULT_OPERATION_REQUEST_PREPROCESSOR);
+				configuration.remove(RestDocumentationGenerator.ATTRIBUTE_NAME_DEFAULT_OPERATION_RESPONSE_PREPROCESSOR);
 				return configuration;
 			}
 
 		};
+	}
+
+	private static Map<String, Object> retrieveConfiguration(FilterContext context) {
+		Map<String, Object> configuration = context.getValue(CONTEXT_KEY_CONFIGURATION);
+		Assert.state(configuration != null,
+				() -> "REST Docs configuration not found. Did you forget to add a "
+						+ RestAssuredRestDocumentationConfigurer.class.getSimpleName()
+						+ " as a filter when building the RequestSpecification?");
+		return configuration;
 	}
 
 }

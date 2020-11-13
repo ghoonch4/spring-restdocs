@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -55,8 +55,7 @@ public abstract class AbstractSnippetTests {
 
 	@Parameters(name = "{0}")
 	public static List<Object[]> parameters() {
-		return Arrays.asList(
-				new Object[] { "Asciidoctor", TemplateFormats.asciidoctor() },
+		return Arrays.asList(new Object[] { "Asciidoctor", TemplateFormats.asciidoctor() },
 				new Object[] { "Markdown", TemplateFormats.markdown() });
 	}
 
@@ -79,8 +78,7 @@ public abstract class AbstractSnippetTests {
 	}
 
 	public TableCondition<?> tableWithTitleAndHeader(String title, String... headers) {
-		return SnippetConditions.tableWithTitleAndHeader(this.templateFormat, title,
-				headers);
+		return SnippetConditions.tableWithTitleAndHeader(this.templateFormat, title, headers);
 	}
 
 	public HttpRequestCondition httpRequest(RequestMethod method, String uri) {
@@ -91,9 +89,13 @@ public abstract class AbstractSnippetTests {
 		return SnippetConditions.httpResponse(this.templateFormat, responseStatus);
 	}
 
+	public HttpResponseCondition httpResponse(int responseStatusCode) {
+		return SnippetConditions.httpResponse(this.templateFormat, responseStatusCode, "");
+	}
+
 	protected FileSystemResource snippetResource(String name) {
-		return new FileSystemResource("src/test/resources/custom-snippet-templates/"
-				+ this.templateFormat.getId() + "/" + name + ".snippet");
+		return new FileSystemResource(
+				"src/test/resources/custom-snippet-templates/" + this.templateFormat.getId() + "/" + name + ".snippet");
 	}
 
 }

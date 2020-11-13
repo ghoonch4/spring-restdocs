@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,6 +17,8 @@
 package org.springframework.restdocs.payload;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,62 +40,56 @@ public class XmlContentHandlerTests {
 
 	@Test
 	public void topLevelElementCanBeDocumented() {
-		String undocumentedContent = createHandler("<a>5</a>").getUndocumentedContent(
-				Arrays.asList(fieldWithPath("a").type("a").description("description")));
+		List<FieldDescriptor> descriptors = Arrays.asList(fieldWithPath("a").type("a").description("description"));
+		String undocumentedContent = createHandler("<a>5</a>", descriptors).getUndocumentedContent();
 		assertThat(undocumentedContent).isNull();
 	}
 
 	@Test
 	public void nestedElementCanBeDocumentedLeavingAncestors() {
-		String undocumentedContent = createHandler("<a><b>5</b></a>")
-				.getUndocumentedContent(Arrays.asList(
-						fieldWithPath("a/b").type("b").description("description")));
+		List<FieldDescriptor> descriptors = Arrays.asList(fieldWithPath("a/b").type("b").description("description"));
+		String undocumentedContent = createHandler("<a><b>5</b></a>", descriptors).getUndocumentedContent();
 		assertThat(undocumentedContent).isEqualTo(String.format("<a/>%n"));
 	}
 
 	@Test
 	public void fieldDescriptorDoesNotDocumentEntireSubsection() {
-		String undocumentedContent = createHandler("<a><b>5</b></a>")
-				.getUndocumentedContent(Arrays
-						.asList(fieldWithPath("a").type("a").description("description")));
-		assertThat(undocumentedContent)
-				.isEqualTo(String.format("<a>%n    <b>5</b>%n</a>%n"));
+		List<FieldDescriptor> descriptors = Arrays.asList(fieldWithPath("a").type("a").description("description"));
+		String undocumentedContent = createHandler("<a><b>5</b></a>", descriptors).getUndocumentedContent();
+		assertThat(undocumentedContent).isEqualTo(String.format("<a>%n    <b>5</b>%n</a>%n"));
 	}
 
 	@Test
 	public void subsectionDescriptorDocumentsEntireSubsection() {
-		String undocumentedContent = createHandler("<a><b>5</b></a>")
-				.getUndocumentedContent(Arrays.asList(
-						subsectionWithPath("a").type("a").description("description")));
+		List<FieldDescriptor> descriptors = Arrays.asList(subsectionWithPath("a").type("a").description("description"));
+		String undocumentedContent = createHandler("<a><b>5</b></a>", descriptors).getUndocumentedContent();
 		assertThat(undocumentedContent).isNull();
 	}
 
 	@Test
 	public void multipleElementsCanBeInDescendingOrderDocumented() {
-		String undocumentedContent = createHandler("<a><b>5</b></a>")
-				.getUndocumentedContent(Arrays.asList(
-						fieldWithPath("a").type("a").description("description"),
-						fieldWithPath("a/b").type("b").description("description")));
+		List<FieldDescriptor> descriptors = Arrays.asList(fieldWithPath("a").type("a").description("description"),
+				fieldWithPath("a/b").type("b").description("description"));
+		String undocumentedContent = createHandler("<a><b>5</b></a>", descriptors).getUndocumentedContent();
 		assertThat(undocumentedContent).isNull();
 	}
 
 	@Test
 	public void multipleElementsCanBeInAscendingOrderDocumented() {
-		String undocumentedContent = createHandler("<a><b>5</b></a>")
-				.getUndocumentedContent(Arrays.asList(
-						fieldWithPath("a/b").type("b").description("description"),
-						fieldWithPath("a").type("a").description("description")));
+		List<FieldDescriptor> descriptors = Arrays.asList(fieldWithPath("a/b").type("b").description("description"),
+				fieldWithPath("a").type("a").description("description"));
+		String undocumentedContent = createHandler("<a><b>5</b></a>", descriptors).getUndocumentedContent();
 		assertThat(undocumentedContent).isNull();
 	}
 
 	@Test
 	public void failsFastWithNonXmlContent() {
 		this.thrown.expect(PayloadHandlingException.class);
-		createHandler("non-XML content");
+		createHandler("non-XML content", Collections.emptyList());
 	}
 
-	private XmlContentHandler createHandler(String xml) {
-		return new XmlContentHandler(xml.getBytes());
+	private XmlContentHandler createHandler(String xml, List<FieldDescriptor> descriptors) {
+		return new XmlContentHandler(xml.getBytes(), descriptors);
 	}
 
 }

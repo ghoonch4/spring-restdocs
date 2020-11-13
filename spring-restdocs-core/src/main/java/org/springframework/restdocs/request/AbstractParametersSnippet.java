@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -55,18 +55,14 @@ public abstract class AbstractParametersSnippet extends TemplatedSnippet {
 	 * @param ignoreUndocumentedParameters whether undocumented parameters should be
 	 * ignored
 	 */
-	protected AbstractParametersSnippet(String snippetName,
-			List<ParameterDescriptor> descriptors, Map<String, Object> attributes,
-			boolean ignoreUndocumentedParameters) {
+	protected AbstractParametersSnippet(String snippetName, List<ParameterDescriptor> descriptors,
+			Map<String, Object> attributes, boolean ignoreUndocumentedParameters) {
 		super(snippetName, attributes);
 		for (ParameterDescriptor descriptor : descriptors) {
-			Assert.notNull(descriptor.getName(),
-					"Parameter descriptors must have a name");
+			Assert.notNull(descriptor.getName(), "Parameter descriptors must have a name");
 			if (!descriptor.isIgnored()) {
-				Assert.notNull(descriptor.getDescription(),
-						"The descriptor for parameter '" + descriptor.getName()
-								+ "' must either have a description or be marked as "
-								+ "ignored");
+				Assert.notNull(descriptor.getDescription(), "The descriptor for parameter '" + descriptor.getName()
+						+ "' must either have a description or be marked as " + "ignored");
 			}
 			this.descriptorsByName.put(descriptor.getName(), descriptor);
 		}
@@ -79,8 +75,7 @@ public abstract class AbstractParametersSnippet extends TemplatedSnippet {
 
 		Map<String, Object> model = new HashMap<>();
 		List<Map<String, Object>> parameters = new ArrayList<>();
-		for (Entry<String, ParameterDescriptor> entry : this.descriptorsByName
-				.entrySet()) {
+		for (Entry<String, ParameterDescriptor> entry : this.descriptorsByName.entrySet()) {
 			ParameterDescriptor descriptor = entry.getValue();
 			if (!descriptor.isIgnored()) {
 				parameters.add(createModelForDescriptor(descriptor));
@@ -93,8 +88,7 @@ public abstract class AbstractParametersSnippet extends TemplatedSnippet {
 	private void verifyParameterDescriptors(Operation operation) {
 		Set<String> actualParameters = extractActualParameters(operation);
 		Set<String> expectedParameters = new HashSet<>();
-		for (Entry<String, ParameterDescriptor> entry : this.descriptorsByName
-				.entrySet()) {
+		for (Entry<String, ParameterDescriptor> entry : this.descriptorsByName.entrySet()) {
 			if (!entry.getValue().isOptional()) {
 				expectedParameters.add(entry.getKey());
 			}
@@ -130,8 +124,7 @@ public abstract class AbstractParametersSnippet extends TemplatedSnippet {
 	 * @param missingParameters the parameters that were documented but were not found in
 	 * the operation
 	 */
-	protected abstract void verificationFailed(Set<String> undocumentedParameters,
-			Set<String> missingParameters);
+	protected abstract void verificationFailed(Set<String> undocumentedParameters, Set<String> missingParameters);
 
 	/**
 	 * Returns a {@code Map} of {@link ParameterDescriptor ParameterDescriptors} that will
@@ -156,12 +149,21 @@ public abstract class AbstractParametersSnippet extends TemplatedSnippet {
 	}
 
 	/**
+	 * Returns whether to ignore undocumented parameters.
+	 * @return {@code true} if undocumented parameters should be ignored, otherwise
+	 * {@code false}
+	 * @since 2.0.5
+	 */
+	protected final boolean isIgnoreUndocumentedParameters() {
+		return this.ignoreUndocumentedParameters;
+	}
+
+	/**
 	 * Returns a model for the given {@code descriptor}.
 	 * @param descriptor the descriptor
 	 * @return the model
 	 */
-	protected Map<String, Object> createModelForDescriptor(
-			ParameterDescriptor descriptor) {
+	protected Map<String, Object> createModelForDescriptor(ParameterDescriptor descriptor) {
 		Map<String, Object> model = new HashMap<>();
 		model.put("name", descriptor.getName());
 		model.put("description", descriptor.getDescription());

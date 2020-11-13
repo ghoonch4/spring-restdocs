@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,6 +17,7 @@
 package org.springframework.restdocs.operation;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -43,11 +44,10 @@ public class OperationRequestFactory {
 	 * @param cookies the request's cookies
 	 * @return the {@code OperationRequest}
 	 */
-	public OperationRequest create(URI uri, HttpMethod method, byte[] content,
-			HttpHeaders headers, Parameters parameters,
-			Collection<OperationRequestPart> parts, Collection<RequestCookie> cookies) {
-		return new StandardOperationRequest(uri, method, content,
-				augmentHeaders(headers, uri, content), parameters, parts, cookies);
+	public OperationRequest create(URI uri, HttpMethod method, byte[] content, HttpHeaders headers,
+			Parameters parameters, Collection<OperationRequestPart> parts, Collection<RequestCookie> cookies) {
+		return new StandardOperationRequest(uri, method, content, augmentHeaders(headers, uri, content), parameters,
+				parts, cookies);
 	}
 
 	/**
@@ -62,11 +62,9 @@ public class OperationRequestFactory {
 	 * @param parts the request's parts
 	 * @return the {@code OperationRequest}
 	 */
-	public OperationRequest create(URI uri, HttpMethod method, byte[] content,
-			HttpHeaders headers, Parameters parameters,
-			Collection<OperationRequestPart> parts) {
-		return create(uri, method, content, headers, parameters, parts,
-				Collections.<RequestCookie>emptyList());
+	public OperationRequest create(URI uri, HttpMethod method, byte[] content, HttpHeaders headers,
+			Parameters parameters, Collection<OperationRequestPart> parts) {
+		return create(uri, method, content, headers, parameters, parts, Collections.<RequestCookie>emptyList());
 	}
 
 	/**
@@ -78,9 +76,9 @@ public class OperationRequestFactory {
 	 * @return the new request with the new content
 	 */
 	public OperationRequest createFrom(OperationRequest original, byte[] newContent) {
-		return new StandardOperationRequest(original.getUri(), original.getMethod(),
-				newContent, getUpdatedHeaders(original.getHeaders(), newContent),
-				original.getParameters(), original.getParts(), original.getCookies());
+		return new StandardOperationRequest(original.getUri(), original.getMethod(), newContent,
+				getUpdatedHeaders(original.getHeaders(), newContent), original.getParameters(), original.getParts(),
+				original.getCookies());
 	}
 
 	/**
@@ -90,31 +88,39 @@ public class OperationRequestFactory {
 	 * @param newHeaders the new headers
 	 * @return the new request with the new headers
 	 */
-	public OperationRequest createFrom(OperationRequest original,
-			HttpHeaders newHeaders) {
-		return new StandardOperationRequest(original.getUri(), original.getMethod(),
-				original.getContent(), newHeaders, original.getParameters(),
-				original.getParts(), original.getCookies());
+	public OperationRequest createFrom(OperationRequest original, HttpHeaders newHeaders) {
+		return new StandardOperationRequest(original.getUri(), original.getMethod(), original.getContent(), newHeaders,
+				original.getParameters(), original.getParts(), original.getCookies());
 	}
 
 	/**
 	 * Creates a new {@code OperationRequest} based on the given {@code original} but with
-	 * the given {@code newParameters}.
+	 * the given {@code newParameters} applied. The query string of a {@code GET} request
+	 * will be updated to reflect the new parameters.
 	 * @param original the original request
 	 * @param newParameters the new parameters
-	 * @return the new request with the new parameters
+	 * @return the new request with the parameters applied
 	 */
-	public OperationRequest createFrom(OperationRequest original,
-			Parameters newParameters) {
-		return new StandardOperationRequest(original.getUri(), original.getMethod(),
-				original.getContent(), original.getHeaders(), newParameters,
-				original.getParts(), original.getCookies());
+	public OperationRequest createFrom(OperationRequest original, Parameters newParameters) {
+		URI uri = (original.getMethod() == HttpMethod.GET) ? updateQueryString(original.getUri(), newParameters)
+				: original.getUri();
+		return new StandardOperationRequest(uri, original.getMethod(), original.getContent(), original.getHeaders(),
+				newParameters, original.getParts(), original.getCookies());
 	}
 
-	private HttpHeaders augmentHeaders(HttpHeaders originalHeaders, URI uri,
-			byte[] content) {
-		return new HttpHeadersHelper(originalHeaders)
-				.addIfAbsent(HttpHeaders.HOST, createHostHeader(uri))
+	private URI updateQueryString(URI originalUri, Parameters parameters) {
+		try {
+			return new URI(originalUri.getScheme(), originalUri.getUserInfo(), originalUri.getHost(),
+					originalUri.getPort(), originalUri.getPath(),
+					parameters.isEmpty() ? null : parameters.toQueryString(), originalUri.getFragment());
+		}
+		catch (URISyntaxException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	private HttpHeaders augmentHeaders(HttpHeaders originalHeaders, URI uri, byte[] content) {
+		return new HttpHeadersHelper(originalHeaders).addIfAbsent(HttpHeaders.HOST, createHostHeader(uri))
 				.setContentLengthHeader(content).getHeaders();
 	}
 
@@ -125,10 +131,8 @@ public class OperationRequestFactory {
 		return uri.getHost() + ":" + uri.getPort();
 	}
 
-	private HttpHeaders getUpdatedHeaders(HttpHeaders originalHeaders,
-			byte[] updatedContent) {
-		return new HttpHeadersHelper(originalHeaders)
-				.updateContentLengthHeaderIfPresent(updatedContent).getHeaders();
+	private HttpHeaders getUpdatedHeaders(HttpHeaders originalHeaders, byte[] updatedContent) {
+		return new HttpHeadersHelper(originalHeaders).updateContentLengthHeaderIfPresent(updatedContent).getHeaders();
 	}
 
 }

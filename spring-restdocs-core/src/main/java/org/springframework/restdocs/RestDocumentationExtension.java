@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,13 +30,31 @@ import org.junit.jupiter.api.extension.ParameterResolver;
  *
  * @author Andy Wilkinson
  */
-public class RestDocumentationExtension
-		implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
+public class RestDocumentationExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
+
+	private final String outputDirectory;
+
+	/**
+	 * Creates a new {@code RestDocumentationExtension} that will use the default output
+	 * directory.
+	 */
+	public RestDocumentationExtension() {
+		this(null);
+	}
+
+	/**
+	 * Creates a new {@code RestDocumentationExtension} that will use the given
+	 * {@code outputDirectory}.
+	 * @param outputDirectory snippet output directory
+	 * @since 2.0.4
+	 */
+	public RestDocumentationExtension(String outputDirectory) {
+		this.outputDirectory = outputDirectory;
+	}
 
 	@Override
 	public void beforeEach(ExtensionContext context) throws Exception {
-		this.getDelegate(context).beforeTest(context.getRequiredTestClass(),
-				context.getRequiredTestMethod().getName());
+		this.getDelegate(context).beforeTest(context.getRequiredTestClass(), context.getRequiredTestMethod().getName());
 	}
 
 	@Override
@@ -45,20 +63,16 @@ public class RestDocumentationExtension
 	}
 
 	@Override
-	public boolean supportsParameter(ParameterContext parameterContext,
-			ExtensionContext extensionContext) {
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		if (isTestMethodContext(extensionContext)) {
-			return RestDocumentationContextProvider.class
-					.isAssignableFrom(parameterContext.getParameter().getType());
+			return RestDocumentationContextProvider.class.isAssignableFrom(parameterContext.getParameter().getType());
 		}
 		return false;
 	}
 
 	@Override
-	public Object resolveParameter(ParameterContext parameterContext,
-			ExtensionContext context) {
-		return (RestDocumentationContextProvider) () -> getDelegate(context)
-				.beforeOperation();
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext context) {
+		return (RestDocumentationContextProvider) () -> getDelegate(context).beforeOperation();
 	}
 
 	private boolean isTestMethodContext(ExtensionContext context) {
@@ -67,9 +81,17 @@ public class RestDocumentationExtension
 
 	private ManualRestDocumentation getDelegate(ExtensionContext context) {
 		Namespace namespace = Namespace.create(getClass(), context.getUniqueId());
-		return context.getStore(namespace).getOrComputeIfAbsent(
-				ManualRestDocumentation.class, (key) -> new ManualRestDocumentation(),
-				ManualRestDocumentation.class);
+		return context.getStore(namespace).getOrComputeIfAbsent(ManualRestDocumentation.class,
+				this::createManualRestDocumentation, ManualRestDocumentation.class);
+	}
+
+	private ManualRestDocumentation createManualRestDocumentation(Class<ManualRestDocumentation> key) {
+		if (this.outputDirectory != null) {
+			return new ManualRestDocumentation(this.outputDirectory);
+		}
+		else {
+			return new ManualRestDocumentation();
+		}
 	}
 
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,7 @@
 
 package org.springframework.restdocs.config;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -92,11 +93,9 @@ public abstract class RestDocumentationConfigurer<S extends AbstractConfigurer, 
 	 * @param configuration the configuration
 	 * @param context the current context
 	 */
-	protected final void apply(Map<String, Object> configuration,
-			RestDocumentationContext context) {
-		List<AbstractConfigurer> configurers = Arrays.asList(snippets(),
-				operationPreprocessors(), this.templateEngineConfigurer,
-				this.writerResolverConfigurer);
+	protected final void apply(Map<String, Object> configuration, RestDocumentationContext context) {
+		List<AbstractConfigurer> configurers = Arrays.asList(snippets(), operationPreprocessors(),
+				this.templateEngineConfigurer, this.writerResolverConfigurer);
 		for (AbstractConfigurer configurer : configurers) {
 			configurer.apply(configuration, context);
 		}
@@ -107,22 +106,19 @@ public abstract class RestDocumentationConfigurer<S extends AbstractConfigurer, 
 		private TemplateEngine templateEngine;
 
 		@Override
-		public void apply(Map<String, Object> configuration,
-				RestDocumentationContext context) {
+		public void apply(Map<String, Object> configuration, RestDocumentationContext context) {
 			TemplateEngine engineToUse = this.templateEngine;
 			if (engineToUse == null) {
 				SnippetConfiguration snippetConfiguration = (SnippetConfiguration) configuration
 						.get(SnippetConfiguration.class.getName());
 				Map<String, Object> templateContext = new HashMap<>();
-				if (snippetConfiguration.getTemplateFormat().getId()
-						.equals(TemplateFormats.asciidoctor().getId())) {
-					templateContext.put("tableCellContent",
-							new AsciidoctorTableCellContentLambda());
+				if (snippetConfiguration.getTemplateFormat().getId().equals(TemplateFormats.asciidoctor().getId())) {
+					templateContext.put("tableCellContent", new AsciidoctorTableCellContentLambda());
 				}
 				engineToUse = new MustacheTemplateEngine(
-						new StandardTemplateResourceResolver(
-								snippetConfiguration.getTemplateFormat()),
-						Mustache.compiler().escapeHTML(false), templateContext);
+						new StandardTemplateResourceResolver(snippetConfiguration.getTemplateFormat()),
+						Charset.forName(snippetConfiguration.getEncoding()), Mustache.compiler().escapeHTML(false),
+						templateContext);
 			}
 			configuration.put(TemplateEngine.class.getName(), engineToUse);
 		}
@@ -138,16 +134,13 @@ public abstract class RestDocumentationConfigurer<S extends AbstractConfigurer, 
 		private WriterResolver writerResolver;
 
 		@Override
-		public void apply(Map<String, Object> configuration,
-				RestDocumentationContext context) {
+		public void apply(Map<String, Object> configuration, RestDocumentationContext context) {
 			WriterResolver resolverToUse = this.writerResolver;
 			if (resolverToUse == null) {
 				SnippetConfiguration snippetConfiguration = (SnippetConfiguration) configuration
 						.get(SnippetConfiguration.class.getName());
-				resolverToUse = new StandardWriterResolver(
-						new RestDocumentationContextPlaceholderResolverFactory(),
-						snippetConfiguration.getEncoding(),
-						snippetConfiguration.getTemplateFormat());
+				resolverToUse = new StandardWriterResolver(new RestDocumentationContextPlaceholderResolverFactory(),
+						snippetConfiguration.getEncoding(), snippetConfiguration.getTemplateFormat());
 			}
 			configuration.put(WriterResolver.class.getName(), resolverToUse);
 		}

@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,8 +33,7 @@ final class JsonFieldPath {
 	private static final Pattern BRACKETS_AND_ARRAY_PATTERN = Pattern
 			.compile("\\[\'(.+?)\'\\]|\\[([0-9]+|\\*){0,1}\\]");
 
-	private static final Pattern ARRAY_INDEX_PATTERN = Pattern
-			.compile("\\[([0-9]+|\\*){0,1}\\]");
+	private static final Pattern ARRAY_INDEX_PATTERN = Pattern.compile("\\[([0-9]+|\\*){0,1}\\]");
 
 	private final String rawPath;
 
@@ -57,14 +56,33 @@ final class JsonFieldPath {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		JsonFieldPath other = (JsonFieldPath) obj;
+		return this.segments.equals(other.segments);
+	}
+
+	@Override
+	public int hashCode() {
+		return this.segments.hashCode();
+	}
+
+	@Override
 	public String toString() {
 		return this.rawPath;
 	}
 
 	static JsonFieldPath compile(String path) {
 		List<String> segments = extractSegments(path);
-		return new JsonFieldPath(path, segments,
-				matchesSingleValue(segments) ? PathType.SINGLE : PathType.MULTI);
+		return new JsonFieldPath(path, segments, matchesSingleValue(segments) ? PathType.SINGLE : PathType.MULTI);
 	}
 
 	static boolean isArraySegment(String segment) {
@@ -75,8 +93,7 @@ final class JsonFieldPath {
 		Iterator<String> iterator = segments.iterator();
 		while (iterator.hasNext()) {
 			String segment = iterator.next();
-			if ((isArraySegment(segment) && iterator.hasNext())
-					|| isWildcardSegment(segment)) {
+			if ((isArraySegment(segment) && iterator.hasNext()) || isWildcardSegment(segment)) {
 				return false;
 			}
 		}
@@ -95,8 +112,7 @@ final class JsonFieldPath {
 		List<String> segments = new ArrayList<>();
 		while (matcher.find()) {
 			if (previous != matcher.start()) {
-				segments.addAll(extractDotSeparatedSegments(
-						path.substring(previous, matcher.start())));
+				segments.addAll(extractDotSeparatedSegments(path.substring(previous, matcher.start())));
 			}
 			if (matcher.group(1) != null) {
 				segments.add(matcher.group(1));

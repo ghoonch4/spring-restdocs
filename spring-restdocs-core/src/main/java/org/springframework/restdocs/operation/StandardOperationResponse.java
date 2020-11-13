@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,10 +24,9 @@ import org.springframework.http.HttpStatus;
  *
  * @author Andy Wilkinson
  */
-class StandardOperationResponse extends AbstractOperationMessage
-		implements OperationResponse {
+class StandardOperationResponse extends AbstractOperationMessage implements OperationResponse {
 
-	private final HttpStatus status;
+	private final int status;
 
 	/**
 	 * Creates a new response with the given {@code status}, {@code headers}, and
@@ -36,13 +35,18 @@ class StandardOperationResponse extends AbstractOperationMessage
 	 * @param headers the headers of the response
 	 * @param content the content of the response
 	 */
-	StandardOperationResponse(HttpStatus status, HttpHeaders headers, byte[] content) {
+	StandardOperationResponse(int status, HttpHeaders headers, byte[] content) {
 		super(content, headers);
 		this.status = status;
 	}
 
 	@Override
 	public HttpStatus getStatus() {
+		return HttpStatus.resolve(this.status);
+	}
+
+	@Override
+	public int getStatusCode() {
 		return this.status;
 	}
 

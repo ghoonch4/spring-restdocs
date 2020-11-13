@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -67,11 +67,9 @@ public final class ManualRestDocumentation implements RestDocumentationContextPr
 	 */
 	public void beforeTest(Class<?> testClass, String testMethodName) {
 		if (this.context != null) {
-			throw new IllegalStateException(
-					"Context already exists. Did you forget to call afterTest()?");
+			throw new IllegalStateException("Context already exists. Did you forget to call afterTest()?");
 		}
-		this.context = new StandardRestDocumentationContext(testClass, testMethodName,
-				this.outputDirectory);
+		this.context = new StandardRestDocumentationContext(testClass, testMethodName, this.outputDirectory);
 	}
 
 	/**

@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -61,8 +61,7 @@ public class PathParametersSnippet extends AbstractParametersSnippet {
 	 * @param ignoreUndocumentedParameters whether undocumented parameters should be
 	 * ignored
 	 */
-	protected PathParametersSnippet(List<ParameterDescriptor> descriptors,
-			boolean ignoreUndocumentedParameters) {
+	protected PathParametersSnippet(List<ParameterDescriptor> descriptors, boolean ignoreUndocumentedParameters) {
 		this(descriptors, null, ignoreUndocumentedParameters);
 	}
 
@@ -74,8 +73,7 @@ public class PathParametersSnippet extends AbstractParametersSnippet {
 	 * @param descriptors the parameter descriptors
 	 * @param attributes the additional attributes
 	 */
-	protected PathParametersSnippet(List<ParameterDescriptor> descriptors,
-			Map<String, Object> attributes) {
+	protected PathParametersSnippet(List<ParameterDescriptor> descriptors, Map<String, Object> attributes) {
 		this(descriptors, attributes, false);
 	}
 
@@ -90,8 +88,8 @@ public class PathParametersSnippet extends AbstractParametersSnippet {
 	 * @param ignoreUndocumentedParameters whether undocumented parameters should be
 	 * ignored
 	 */
-	protected PathParametersSnippet(List<ParameterDescriptor> descriptors,
-			Map<String, Object> attributes, boolean ignoreUndocumentedParameters) {
+	protected PathParametersSnippet(List<ParameterDescriptor> descriptors, Map<String, Object> attributes,
+			boolean ignoreUndocumentedParameters) {
 		super("path-parameters", descriptors, attributes, ignoreUndocumentedParameters);
 	}
 
@@ -136,19 +134,17 @@ public class PathParametersSnippet extends AbstractParametersSnippet {
 	}
 
 	@Override
-	protected void verificationFailed(Set<String> undocumentedParameters,
-			Set<String> missingParameters) {
+	protected void verificationFailed(Set<String> undocumentedParameters, Set<String> missingParameters) {
 		String message = "";
 		if (!undocumentedParameters.isEmpty()) {
-			message += "Path parameters with the following names were not documented: "
-					+ undocumentedParameters;
+			message += "Path parameters with the following names were not documented: " + undocumentedParameters;
 		}
 		if (!missingParameters.isEmpty()) {
 			if (message.length() > 0) {
 				message += ". ";
 			}
-			message += "Path parameters with the following names were not found in "
-					+ "the request: " + missingParameters;
+			message += "Path parameters with the following names were not found in " + "the request: "
+					+ missingParameters;
 		}
 		throw new SnippetException(message);
 	}
@@ -171,12 +167,10 @@ public class PathParametersSnippet extends AbstractParametersSnippet {
 	 * @param additionalDescriptors the additional descriptors
 	 * @return the new snippet
 	 */
-	public final PathParametersSnippet and(
-			List<ParameterDescriptor> additionalDescriptors) {
-		List<ParameterDescriptor> combinedDescriptors = new ArrayList<>(
-				getParameterDescriptors().values());
+	public final PathParametersSnippet and(List<ParameterDescriptor> additionalDescriptors) {
+		List<ParameterDescriptor> combinedDescriptors = new ArrayList<>(getParameterDescriptors().values());
 		combinedDescriptors.addAll(additionalDescriptors);
-		return new PathParametersSnippet(combinedDescriptors, this.getAttributes());
+		return new PathParametersSnippet(combinedDescriptors, this.getAttributes(), isIgnoreUndocumentedParameters());
 	}
 
 }

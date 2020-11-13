@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -76,8 +76,7 @@ public class HttpRequestSnippet extends TemplatedSnippet {
 	private String getPath(OperationRequest request) {
 		String path = request.getUri().getRawPath();
 		String queryString = request.getUri().getRawQuery();
-		Parameters uniqueParameters = request.getParameters()
-				.getUniqueParameters(request.getUri());
+		Parameters uniqueParameters = request.getParameters().getUniqueParameters(request.getUri());
 		if (!uniqueParameters.isEmpty() && includeParametersInUri(request)) {
 			if (StringUtils.hasText(queryString)) {
 				queryString = queryString + "&" + uniqueParameters.toQueryString();
@@ -93,8 +92,9 @@ public class HttpRequestSnippet extends TemplatedSnippet {
 	}
 
 	private boolean includeParametersInUri(OperationRequest request) {
-		return request.getMethod() == HttpMethod.GET || (request.getContent().length > 0
-				&& !MediaType.APPLICATION_FORM_URLENCODED
+		HttpMethod method = request.getMethod();
+		return (method != HttpMethod.PUT && method != HttpMethod.POST && method != HttpMethod.PATCH)
+				|| (request.getContent().length > 0 && !MediaType.APPLICATION_FORM_URLENCODED
 						.isCompatibleWith(request.getHeaders().getContentType()));
 	}
 
@@ -103,10 +103,8 @@ public class HttpRequestSnippet extends TemplatedSnippet {
 
 		for (Entry<String, List<String>> header : request.getHeaders().entrySet()) {
 			for (String value : header.getValue()) {
-				if (HttpHeaders.CONTENT_TYPE.equals(header.getKey())
-						&& !request.getParts().isEmpty()) {
-					headers.add(header(header.getKey(),
-							String.format("%s; boundary=%s", value, MULTIPART_BOUNDARY)));
+				if (HttpHeaders.CONTENT_TYPE.equals(header.getKey()) && !request.getParts().isEmpty()) {
+					headers.add(header(header.getKey(), String.format("%s; boundary=%s", value, MULTIPART_BOUNDARY)));
 				}
 				else {
 					headers.add(header(header.getKey(), value));
@@ -116,13 +114,11 @@ public class HttpRequestSnippet extends TemplatedSnippet {
 		}
 
 		for (RequestCookie cookie : request.getCookies()) {
-			headers.add(header(HttpHeaders.COOKIE,
-					String.format("%s=%s", cookie.getName(), cookie.getValue())));
+			headers.add(header(HttpHeaders.COOKIE, String.format("%s=%s", cookie.getName(), cookie.getValue())));
 		}
 
 		if (requiresFormEncodingContentTypeHeader(request)) {
-			headers.add(header(HttpHeaders.CONTENT_TYPE,
-					MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+			headers.add(header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE));
 		}
 		return headers;
 	}
@@ -150,8 +146,7 @@ public class HttpRequestSnippet extends TemplatedSnippet {
 	}
 
 	private boolean isPutOrPost(OperationRequest request) {
-		return HttpMethod.PUT.equals(request.getMethod())
-				|| HttpMethod.POST.equals(request.getMethod());
+		return HttpMethod.PUT.equals(request.getMethod()) || HttpMethod.POST.equals(request.getMethod());
 	}
 
 	private void writeParts(OperationRequest request, PrintWriter writer) {
@@ -186,8 +181,7 @@ public class HttpRequestSnippet extends TemplatedSnippet {
 				part.getHeaders().getContentType(), writer);
 	}
 
-	private void writePart(String name, String value, String filename,
-			MediaType contentType, PrintWriter writer) {
+	private void writePart(String name, String value, String filename, MediaType contentType, PrintWriter writer) {
 		writer.printf("Content-Disposition: form-data; name=%s", name);
 		if (StringUtils.hasText(filename)) {
 			writer.printf("; filename=%s", filename);
@@ -205,9 +199,8 @@ public class HttpRequestSnippet extends TemplatedSnippet {
 	}
 
 	private boolean requiresFormEncodingContentTypeHeader(OperationRequest request) {
-		return request.getHeaders().get(HttpHeaders.CONTENT_TYPE) == null
-				&& isPutOrPost(request) && (!request.getParameters().isEmpty()
-						&& !includeParametersInUri(request));
+		return request.getHeaders().get(HttpHeaders.CONTENT_TYPE) == null && isPutOrPost(request)
+				&& (!request.getParameters().isEmpty() && !includeParametersInUri(request));
 	}
 
 	private Map<String, String> header(String name, String value) {

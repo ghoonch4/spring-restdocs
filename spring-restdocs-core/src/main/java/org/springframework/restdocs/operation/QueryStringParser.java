@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -64,15 +64,12 @@ public class QueryStringParser {
 				parameters.add(decode(name), decode(value));
 			}
 			else {
-				List<String> values = parameters.get(components[0]);
-				if (values == null) {
-					parameters.put(components[0], new LinkedList<String>());
-				}
+				List<String> values = parameters.computeIfAbsent(components[0], (p) -> new LinkedList<String>());
+				values.add("");
 			}
 		}
 		else {
-			throw new IllegalArgumentException(
-					"The parameter '" + parameter + "' is malformed");
+			throw new IllegalArgumentException("The parameter '" + parameter + "' is malformed");
 		}
 	}
 
@@ -81,8 +78,7 @@ public class QueryStringParser {
 			return URLDecoder.decode(encoded, "UTF-8");
 		}
 		catch (UnsupportedEncodingException ex) {
-			throw new IllegalStateException(
-					"Unable to URL encode " + encoded + " using UTF-8", ex);
+			throw new IllegalStateException("Unable to URL encode " + encoded + " using UTF-8", ex);
 		}
 
 	}

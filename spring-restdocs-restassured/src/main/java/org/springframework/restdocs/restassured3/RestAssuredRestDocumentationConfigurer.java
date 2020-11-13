@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,16 +40,14 @@ public final class RestAssuredRestDocumentationConfigurer extends
 		RestDocumentationConfigurer<RestAssuredSnippetConfigurer, RestAssuredOperationPreprocessorsConfigurer, RestAssuredRestDocumentationConfigurer>
 		implements Filter {
 
-	private final RestAssuredSnippetConfigurer snippetConfigurer = new RestAssuredSnippetConfigurer(
-			this);
+	private final RestAssuredSnippetConfigurer snippetConfigurer = new RestAssuredSnippetConfigurer(this);
 
 	private final RestAssuredOperationPreprocessorsConfigurer operationPreprocessorsConfigurer = new RestAssuredOperationPreprocessorsConfigurer(
 			this);
 
 	private final RestDocumentationContextProvider contextProvider;
 
-	RestAssuredRestDocumentationConfigurer(
-			RestDocumentationContextProvider contextProvider) {
+	RestAssuredRestDocumentationConfigurer(RestDocumentationContextProvider contextProvider) {
 		this.contextProvider = contextProvider;
 	}
 
@@ -64,13 +62,12 @@ public final class RestAssuredRestDocumentationConfigurer extends
 	}
 
 	@Override
-	public Response filter(FilterableRequestSpecification requestSpec,
-			FilterableResponseSpecification responseSpec, FilterContext filterContext) {
+	public Response filter(FilterableRequestSpecification requestSpec, FilterableResponseSpecification responseSpec,
+			FilterContext filterContext) {
 		RestDocumentationContext context = this.contextProvider.beforeOperation();
 		filterContext.setValue(RestDocumentationContext.class.getName(), context);
 		Map<String, Object> configuration = new HashMap<>();
-		filterContext.setValue(RestDocumentationFilter.CONTEXT_KEY_CONFIGURATION,
-				configuration);
+		filterContext.setValue(RestDocumentationFilter.CONTEXT_KEY_CONFIGURATION, configuration);
 		apply(configuration, context);
 		return filterContext.next(requestSpec, responseSpec);
 	}

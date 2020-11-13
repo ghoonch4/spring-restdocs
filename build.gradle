@@ -8,9 +8,10 @@ buildscript {
 	}
 	dependencies {
 		classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
-		classpath 'io.spring.gradle:spring-io-plugin:0.0.8.RELEASE'
 		classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2'
+		classpath 'io.spring.gradle:dependency-management-plugin:1.0.8.RELEASE'
 		classpath "io.spring.javaformat:spring-javaformat-gradle-plugin:$javaFormatVersion"
+		classpath 'io.spring.nohttp:nohttp-gradle:0.0.2.RELEASE'
 	}
 }
 
@@ -24,6 +25,7 @@ allprojects {
 
 apply plugin: 'samples'
 apply plugin: 'org.sonarqube'
+apply plugin: 'io.spring.nohttp'
 
 sonarqube {
 	properties {
@@ -36,11 +38,19 @@ sonarqube {
 	}
 }
 
+nohttp {
+	source.exclude 'samples/rest-notes-slate/slate/source/javascripts/lib/_jquery*.js'
+	source.exclude 'buildSrc/.gradle/**'
+	source.exclude '**/build/**'
+	source.exclude '**/target/**'
+	whitelistFile = project.file('config/nohttp/whitelist.lines')
+}
+
 ext {
-	springVersion = '5.0.5.RELEASE'
+	springVersion = '5.0.15.RELEASE'
 	javadocLinks = [
-		'http://docs.oracle.com/javase/8/docs/api/',
-		"http://docs.spring.io/spring-framework/docs/$springVersion/javadoc-api/",
+		'https://docs.oracle.com/javase/8/docs/api/',
+		"https://docs.spring.io/spring-framework/docs/$springVersion/javadoc-api/",
 		'https://docs.jboss.org/hibernate/stable/beanvalidation/api/',
 		'https://docs.jboss.org/hibernate/stable/validator/api/'
 	] as String[]
@@ -72,9 +82,8 @@ subprojects {
 			dependency 'junit:junit:4.12'
 			dependency 'io.rest-assured:rest-assured:3.0.7'
 			dependency 'org.apache.pdfbox:pdfbox:2.0.7'
-			dependency 'org.assertj:assertj-core:2.9.1'
-			dependency 'org.asciidoctor:asciidoctorj:1.5.6'
-			dependency 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16'
+			dependency 'org.assertj:assertj-core:3.11.1'
+			dependency 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.18'
 			dependency 'org.hamcrest:hamcrest-core:1.3'
 			dependency 'org.hamcrest:hamcrest-library:1.3'
 			dependency 'org.hibernate.validator:hibernate-validator:6.0.9.Final'
@@ -107,33 +116,22 @@ subprojects {
 		options.compilerArgs = [ '-Xlint:deprecation', '-Xlint:-options', '-Werror' ]
 	}
 
+	tasks.withType(JavaCompile) {
+		options.encoding = 'UTF-8'
+	}
+
 }
 
-configure(subprojects - project(":docs")) { subproject ->
+def codeProjects = subprojects - project(":docs")
+configure(codeProjects) {
 	apply plugin: 'io.spring.javaformat'
 	apply plugin: 'checkstyle'
 	apply from: "${rootProject.projectDir}/gradle/publish-maven.gradle"
 
-	if (project.hasProperty('platformVersion') && subproject.path != ':spring-restdocs-asciidoctor') {
-		apply plugin: 'spring-io'
-
-		repositories {
-			maven { url "https://repo.spring.io/libs-snapshot" }
-		}
-
-		dependencyManagement {
-			springIoTestRuntime {
-				imports {
-					mavenBom "io.spring.platform:platform-bom:${platformVersion}"
-				}
-			}
-		}
-	}
-
 	checkstyle {
 		configFile = rootProject.file('config/checkstyle/checkstyle.xml')
 		configProperties = [ 'checkstyle.config.dir' : rootProject.file('config/checkstyle') ]
-		toolVersion = '6.10.1'
+		toolVersion = '8.22'
 	}
 
 	configurations {
@@ -144,7 +142,10 @@ configure(subprojects - project(":docs")) { subproject ->
 		checkstyle "io.spring.javaformat:spring-javaformat-checkstyle:$javaFormatVersion"
 		jacoco 'org.jacoco:org.jacoco.agent::runtime'
 	}
+}
 
+def publishedCodeProjects = codeProjects.findAll { codeProject -> !codeProject.name.contains('spring-restdocs-asciidoctor-')}
+configure(publishedCodeProjects) { subproject ->
 	javadoc {
 		description = "Generates project-level javadoc for use in -javadoc jar"
 		options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
@@ -153,6 +154,8 @@ configure(subprojects - project(":docs")) { subproject ->
 		options.docTitle = "${options.header} API"
 		options.links = javadocLinks
 		options.addStringOption '-quiet'
+		options.encoding = 'UTF-8'
+		options.source = '1.8'
 	}
 
 	task sourcesJar(type: Jar) {
@@ -177,10 +180,6 @@ samples {
 	dependOn 'spring-restdocs-restassured:install'
 	dependOn 'spring-restdocs-webtestclient:install'
 	dependOn 'spring-restdocs-asciidoctor:install'
-
-	restNotesGrails {
-		workingDir "$projectDir/samples/rest-notes-grails"
-	}
 
 	restNotesSpringHateoas {
 		workingDir "$projectDir/samples/rest-notes-spring-hateoas"
@@ -228,8 +227,8 @@ task api (type: Javadoc) {
 	options.links = javadocLinks
 	options.addStringOption '-quiet'
 
-	source subprojects.findAll { project -> project.path != ":spring-restdocs-asciidoctor" }
-			.collect { project -> project.sourceSets.main.allJava }
+	source publishedCodeProjects.findAll { it.name != 'spring-restdocs-asciidoctor' }
+			.collect { it.sourceSets.main.allJava }
 
 	destinationDir = new File(buildDir, "api")
 

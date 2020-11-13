@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,6 +29,7 @@ import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ExchangeFunction;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -50,36 +51,30 @@ public class WebTestClientRestDocumentationConfigurerTests {
 		ClientRequest request = ClientRequest.create(HttpMethod.GET, URI.create("/test"))
 				.header(WebTestClient.WEBTESTCLIENT_REQUEST_ID, "1").build();
 		this.configurer.filter(request, mock(ExchangeFunction.class));
-		assertThat(WebTestClientRestDocumentationConfigurer
-				.retrieveConfiguration(request.headers())).isNotNull();
-		assertThat(WebTestClientRestDocumentationConfigurer
-				.retrieveConfiguration(request.headers())).isNull();
+		assertThat(WebTestClientRestDocumentationConfigurer.retrieveConfiguration(request.headers())).isNotNull();
+		assertThatIllegalStateException()
+				.isThrownBy(() -> WebTestClientRestDocumentationConfigurer.retrieveConfiguration(request.headers()));
 	}
 
 	@Test
 	public void requestUriHasDefaultsAppliedWhenItHasNoHost() {
-		ClientRequest request = ClientRequest
-				.create(HttpMethod.GET, URI.create("/test?foo=bar#baz"))
+		ClientRequest request = ClientRequest.create(HttpMethod.GET, URI.create("/test?foo=bar#baz"))
 				.header(WebTestClient.WEBTESTCLIENT_REQUEST_ID, "1").build();
 		ExchangeFunction exchangeFunction = mock(ExchangeFunction.class);
 		this.configurer.filter(request, exchangeFunction);
-		ArgumentCaptor<ClientRequest> requestCaptor = ArgumentCaptor
-				.forClass(ClientRequest.class);
+		ArgumentCaptor<ClientRequest> requestCaptor = ArgumentCaptor.forClass(ClientRequest.class);
 		verify(exchangeFunction).exchange(requestCaptor.capture());
-		assertThat(requestCaptor.getValue().url())
-				.isEqualTo(URI.create("http://localhost:8080/test?foo=bar#baz"));
+		assertThat(requestCaptor.getValue().url()).isEqualTo(URI.create("http://localhost:8080/test?foo=bar#baz"));
 	}
 
 	@Test
 	public void requestUriIsNotChangedWhenItHasAHost() {
 		ClientRequest request = ClientRequest
-				.create(HttpMethod.GET,
-						URI.create("https://api.example.com:4567/test?foo=bar#baz"))
+				.create(HttpMethod.GET, URI.create("https://api.example.com:4567/test?foo=bar#baz"))
 				.header(WebTestClient.WEBTESTCLIENT_REQUEST_ID, "1").build();
 		ExchangeFunction exchangeFunction = mock(ExchangeFunction.class);
 		this.configurer.filter(request, exchangeFunction);
-		ArgumentCaptor<ClientRequest> requestCaptor = ArgumentCaptor
-				.forClass(ClientRequest.class);
+		ArgumentCaptor<ClientRequest> requestCaptor = ArgumentCaptor.forClass(ClientRequest.class);
 		verify(exchangeFunction).exchange(requestCaptor.capture());
 		assertThat(requestCaptor.getValue().url())
 				.isEqualTo(URI.create("https://api.example.com:4567/test?foo=bar#baz"));

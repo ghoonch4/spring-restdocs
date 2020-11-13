@@ -3,12 +3,12 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.0.0.RELEASE'
+		classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.9.RELEASE'
 	}
 }
 
 plugins {
-	id "org.asciidoctor.convert" version "1.5.3"
+	id "org.asciidoctor.convert" version "1.5.9.2"
 }
 
 apply plugin: 'java'
@@ -31,17 +31,14 @@ ext {
 	snippetsDir = file('build/generated-snippets')
 }
 
-ext['spring-restdocs.version'] = '2.0.4.BUILD-SNAPSHOT'
+ext['spring-restdocs.version'] = '2.0.6.BUILD-SNAPSHOT'
 
 dependencies {
-	asciidoctor "org.springframework.restdocs:spring-restdocs-asciidoctor:${project.ext['spring-restdocs.version']}"
-
+	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 	compile 'org.springframework.boot:spring-boot-starter-hateoas'
-
 	runtime 'com.h2database:h2'
 	runtime 'org.atteo:evo-inflector:1.2.1'
-
 	testCompile 'com.jayway.jsonpath:json-path'
 	testCompile 'org.assertj:assertj-core'
 	testCompile 'org.springframework.boot:spring-boot-starter-test'

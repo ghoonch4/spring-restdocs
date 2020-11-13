@@ -18,12 +18,12 @@ If you want to jump straight in, a number of sample applications are available:
 | {samples}/rest-notes-spring-data-rest[Spring Data REST]
 | Maven
 | Demonstrates the creation of a getting started guide and an API guide for a service
-  implemented by using http://projects.spring.io/spring-data-rest/[Spring Data REST].
+  implemented by using https://projects.spring.io/spring-data-rest/[Spring Data REST].
 
 | {samples}/rest-notes-spring-hateoas[Spring HATEOAS]
 | Gradle
 | Demonstrates the creation of a getting started guide and an API guide for a service
-  implemented by using http://projects.spring.io/spring-hateoas/[Spring HATEOAS].
+  implemented by using https://projects.spring.io/spring-hateoas/[Spring HATEOAS].
 
 |===
 
@@ -44,11 +44,6 @@ If you want to jump straight in, a number of sample applications are available:
 |===
 | Sample | Build system | Description
 
-| {samples}/rest-notes-grails[Grails]
-| Gradle
-| Demonstrates the use of Spring REST docs with https://grails.org[Grails] and
-  https://github.com/spockframework/spock[Spock].
-
 | {samples}/rest-assured[REST Assured]
 | Gradle
 | Demonstrates the use of Spring REST Docs with http://rest-assured.io[REST Assured].
@@ -64,7 +59,7 @@ If you want to jump straight in, a number of sample applications are available:
 | {samples}/rest-notes-slate[Slate]
 | Gradle
 | Demonstrates the use of Spring REST Docs with Markdown and
-  http://github.com/tripit/slate[Slate].
+  https://github.com/tripit/slate[Slate].
 
 | {samples}/testng[TestNG]
 | Gradle
@@ -72,7 +67,7 @@ If you want to jump straight in, a number of sample applications are available:
 
 | {samples}/junit5[JUnit 5]
 | Gradle
-| Demonstrates the use of Spring REST Docs with http://junit.org/junit5/[JUnit 5].
+| Demonstrates the use of Spring REST Docs with https://junit.org/junit5/[JUnit 5].
 
 |===
 
@@ -111,7 +106,7 @@ the configuration are described in the following listings:
 			<plugin> <2>
 				<groupId>org.asciidoctor</groupId>
 				<artifactId>asciidoctor-maven-plugin</artifactId>
-				<version>1.5.3</version>
+				<version>1.5.8</version>
 				<executions>
 					<execution>
 						<id>generate-docs</id>
@@ -141,7 +136,7 @@ the configuration are described in the following listings:
 	`spring-restdocs-webtestclient` or `spring-restdocs-restassured` respectively instead.
 <2> Add the Asciidoctor plugin.
 <3> Using `prepare-package` allows the documentation to be
-	<<getting-started-build-configuration-maven-packaging, included in the package>>.
+	<<getting-started-build-configuration-packaging-the-documentation, included in the package>>.
 <4> Add `spring-restdocs-asciidoctor` as a dependency of the Asciidoctor plugin. This
 	will automatically configure the `snippets` attribute for use in your `.adoc` files to
 	point to `target/generated-snippets`. It will also allow you to use the `operation`
@@ -151,7 +146,7 @@ the configuration are described in the following listings:
 .Gradle
 ----
 	plugins { <1>
-		id "org.asciidoctor.convert" version "1.5.3"
+		id "org.asciidoctor.convert" version "1.5.9.2"
 	}
 
 	dependencies {
@@ -178,8 +173,9 @@ the configuration are described in the following listings:
 	files to point to `build/generated-snippets`. It will also allow you to use the
 	`operation` block macro.
 <3> Add a dependency on `spring-restdocs-mockmvc` in the `testCompile` configuration. If
-	you want to use REST Assured rather than MockMvc, add a dependency on
-	`spring-restdocs-restassured` instead.
+    you want to use `WebTestClient` or REST Assured rather than MockMvc, add a dependency
+    on `spring-restdocs-webtestclient` or `spring-restdocs-restassured` respectively
+    instead.
 <4> Configure a property to define the output location for generated snippets.
 <5> Configure the `test` task to add the snippets directory as an output.
 <6> Configure the `asciidoctor` task
@@ -263,7 +259,7 @@ from where it will be included in the jar file.
 Spring REST Docs uses Spring MVC's
 {spring-framework-docs}/testing.html#spring-mvc-test-framework[test framework],
 Spring WebFlux's {spring-framework-docs}/testing.html#webtestclient[`WebTestClient`], or
-http://www.rest-assured.io[REST Assured] to make requests to the service that you are
+http://rest-assured.io/[REST Assured] to make requests to the service that you are
 documenting. It then produces documentation snippets for the request and the resulting
 response.
 
@@ -397,7 +393,19 @@ based on your project's build tool:
 
 |===
 
+If you are using JUnit 5.1, you can override the default by registering the extension
+as a field in your test class and providing an output directory when creating it. The
+following example shows how to do so:
 
+[source,java,indent=0]
+----
+public class JUnit5ExampleTests {
+
+	@RegisterExtension
+	final RestDocumentationExtension restDocumentation = new RestDocumentationExtension ("custom");
+
+}
+----
 
 Next, you must provide a `@BeforeEach` method to configure MockMvc, WebTestClient, or
 REST Assured. The following listings show how to do so:
@@ -508,7 +516,7 @@ is required.
 <2> Assert that the service produced the expected response.
 <3> Document the call to the service, writing the snippets into a directory named `index`
 (which is located beneath the configured output directory). The snippets are written by
-a `RestDocumentationResultHandler`. You can obtain an instance of this clas from the
+a `RestDocumentationResultHandler`. You can obtain an instance of this class from the
 static `document` method on
 `org.springframework.restdocs.mockmvc.MockMvcRestDocumentation`.
 
@@ -580,7 +588,7 @@ the resulting HTML files depends on whether you use Maven or Gradle:
 
 You can then include the generated snippets in the manually created Asciidoc file
 (described earlier in this section) by using the
-http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/#include-files[include macro].
+https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/#include-files[include macro].
 You can use the `snippets` attribute that is automatically set by
 `spring-restdocs-asciidoctor` configured in the
 <<getting-started-build-configuration,build configuration>> to reference the snippets

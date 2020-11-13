@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,6 +17,7 @@
 package org.springframework.restdocs.operation;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import org.springframework.http.HttpHeaders;
@@ -27,7 +28,7 @@ import org.springframework.http.MediaType;
  *
  * @author Andy Wilkinson
  */
-abstract class AbstractOperationMessage {
+abstract class AbstractOperationMessage implements OperationMessage {
 
 	private final byte[] content;
 
@@ -38,19 +39,24 @@ abstract class AbstractOperationMessage {
 		this.headers = headers;
 	}
 
+	@Override
 	public byte[] getContent() {
 		return Arrays.copyOf(this.content, this.content.length);
 	}
 
+	@Override
 	public HttpHeaders getHeaders() {
 		return HttpHeaders.readOnlyHttpHeaders(this.headers);
 	}
 
+	@Override
 	public String getContentAsString() {
 		if (this.content.length > 0) {
 			Charset charset = extractCharsetFromContentTypeHeader();
-			return (charset != null) ? new String(this.content, charset)
-					: new String(this.content);
+			if (charset == null) {
+				charset = StandardCharsets.UTF_8;
+			}
+			return new String(this.content, charset);
 		}
 		return "";
 	}

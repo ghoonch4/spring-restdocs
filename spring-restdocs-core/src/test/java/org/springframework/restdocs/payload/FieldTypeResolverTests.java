@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +15,8 @@
  */
 
 package org.springframework.restdocs.payload;
+
+import java.util.Collections;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,21 +37,43 @@ public class FieldTypeResolverTests {
 	public ExpectedException thrownException = ExpectedException.none();
 
 	@Test
-	public void returnJsonFieldTypeResolver() {
-		assertThat(FieldTypeResolver.forContent("{\"field\": \"value\"}".getBytes(),
-				MediaType.APPLICATION_JSON)).isInstanceOf(JsonContentHandler.class);
+	@Deprecated
+	public void whenForContentCalledWithJsonContentThenReturnsJsonFieldTypeResolver() {
+		assertThat(FieldTypeResolver.forContent("{\"field\": \"value\"}".getBytes(), MediaType.APPLICATION_JSON))
+				.isInstanceOf(JsonContentHandler.class);
 	}
 
 	@Test
-	public void returnXmlContentHandler() {
-		assertThat(FieldTypeResolver.forContent("<a><b>5</b></a>".getBytes(),
-				MediaType.APPLICATION_XML)).isInstanceOf(XmlContentHandler.class);
+	@Deprecated
+	public void whenForContentCalledWithXmlContentThenReturnsXmlContentHandler() {
+		assertThat(FieldTypeResolver.forContent("<a><b>5</b></a>".getBytes(), MediaType.APPLICATION_XML))
+				.isInstanceOf(XmlContentHandler.class);
 	}
 
 	@Test
-	public void throwOnInvalidContent() {
+	@Deprecated
+	public void whenForContentIsCalledWithInvalidContentThenExceptionIsThrown() {
 		this.thrownException.expect(PayloadHandlingException.class);
 		FieldTypeResolver.forContent("some".getBytes(), MediaType.APPLICATION_XML);
+	}
+
+	@Test
+	public void whenForContentWithDescriptorsCalledWithJsonContentThenReturnsJsonFieldTypeResolver() {
+		assertThat(FieldTypeResolver.forContentWithDescriptors("{\"field\": \"value\"}".getBytes(),
+				MediaType.APPLICATION_JSON, Collections.emptyList())).isInstanceOf(JsonContentHandler.class);
+	}
+
+	@Test
+	public void whenForContentWithDescriptorsCalledWithXmlContentThenReturnsXmlContentHandler() {
+		assertThat(FieldTypeResolver.forContentWithDescriptors("<a><b>5</b></a>".getBytes(), MediaType.APPLICATION_XML,
+				Collections.emptyList())).isInstanceOf(XmlContentHandler.class);
+	}
+
+	@Test
+	public void whenForContentWithDescriptorsIsCalledWithInvalidContentThenExceptionIsThrown() {
+		this.thrownException.expect(PayloadHandlingException.class);
+		FieldTypeResolver.forContentWithDescriptors("some".getBytes(), MediaType.APPLICATION_XML,
+				Collections.emptyList());
 	}
 
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,8 +46,7 @@ public abstract class AbstractBodySnippet extends TemplatedSnippet {
 	 * @param subsectionExtractor the subsection extractor
 	 * @param attributes the attributes
 	 */
-	protected AbstractBodySnippet(String type,
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	protected AbstractBodySnippet(String type, PayloadSubsectionExtractor<?> subsectionExtractor,
 			Map<String, Object> attributes) {
 		this(type, type, subsectionExtractor, attributes);
 	}
@@ -63,12 +62,9 @@ public abstract class AbstractBodySnippet extends TemplatedSnippet {
 	 * @param subsectionExtractor the subsection extractor
 	 * @param attributes the attributes
 	 */
-	protected AbstractBodySnippet(String name, String type,
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	protected AbstractBodySnippet(String name, String type, PayloadSubsectionExtractor<?> subsectionExtractor,
 			Map<String, Object> attributes) {
-		super(name + "-body"
-				+ ((subsectionExtractor != null)
-						? "-" + subsectionExtractor.getSubsectionId() : ""),
+		super(name + "-body" + ((subsectionExtractor != null) ? "-" + subsectionExtractor.getSubsectionId() : ""),
 				type + "-body", attributes);
 		this.subsectionExtractor = subsectionExtractor;
 	}
@@ -79,12 +75,10 @@ public abstract class AbstractBodySnippet extends TemplatedSnippet {
 			MediaType contentType = getContentType(operation);
 			byte[] content = getContent(operation);
 			if (this.subsectionExtractor != null) {
-				content = this.subsectionExtractor.extractSubsection(content,
-						contentType);
+				content = this.subsectionExtractor.extractSubsection(content, contentType);
 			}
 			Charset charset = extractCharset(contentType);
-			String body = (charset != null) ? new String(content, charset)
-					: new String(content);
+			String body = (charset != null) ? new String(content, charset) : new String(content);
 			Map<String, Object> model = new HashMap<>();
 			model.put("body", body);
 			return model;

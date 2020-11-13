@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -49,10 +49,7 @@ public class RestDocumentationResultHandler implements ResultHandler {
 
 	@Override
 	public void handle(MvcResult result) throws Exception {
-		@SuppressWarnings("unchecked")
-		Map<String, Object> configuration = (Map<String, Object>) result.getRequest()
-				.getAttribute(ATTRIBUTE_NAME_CONFIGURATION);
-		this.delegate.handle(result.getRequest(), result.getResponse(), configuration);
+		this.delegate.handle(result.getRequest(), result.getResponse(), retrieveConfiguration(result));
 	}
 
 	/**
@@ -75,14 +72,9 @@ public class RestDocumentationResultHandler implements ResultHandler {
 
 			@Override
 			public void handle(MvcResult result) throws Exception {
-				@SuppressWarnings("unchecked")
-				Map<String, Object> configuration = new HashMap<>(
-						(Map<String, Object>) result.getRequest()
-								.getAttribute(ATTRIBUTE_NAME_CONFIGURATION));
-				configuration.remove(
-						RestDocumentationGenerator.ATTRIBUTE_NAME_DEFAULT_SNIPPETS);
-				getDelegate().handle(result.getRequest(), result.getResponse(),
-						configuration);
+				Map<String, Object> configuration = new HashMap<>(retrieveConfiguration(result));
+				configuration.remove(RestDocumentationGenerator.ATTRIBUTE_NAME_DEFAULT_SNIPPETS);
+				getDelegate().handle(result.getRequest(), result.getResponse(), configuration);
 			}
 
 		};
@@ -94,6 +86,15 @@ public class RestDocumentationResultHandler implements ResultHandler {
 	 */
 	protected final RestDocumentationGenerator<MockHttpServletRequest, MockHttpServletResponse> getDelegate() {
 		return this.delegate;
+	}
+
+	private Map<String, Object> retrieveConfiguration(MvcResult result) {
+		@SuppressWarnings("unchecked")
+		Map<String, Object> configuration = (Map<String, Object>) result.getRequest()
+				.getAttribute(ATTRIBUTE_NAME_CONFIGURATION);
+		Assert.state(configuration != null, () -> "REST Docs configuration not found. Did you forget to apply a "
+				+ MockMvcRestDocumentationConfigurer.class.getSimpleName() + " when building the MockMvc instance?");
+		return configuration;
 	}
 
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2014-2018 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -68,7 +68,8 @@ public abstract class PayloadDocumentation {
 	 *
 	 * The following paths are all present:
 	 *
-	 * <table summary="Paths and their values">
+	 * <table>
+	 * <caption>Paths that are present and their values</caption>
 	 * <tr>
 	 * <th>Path</th>
 	 * <th>Value</th>
@@ -132,7 +133,8 @@ public abstract class PayloadDocumentation {
 	 *
 	 * The following paths are all present:
 	 *
-	 * <table summary="Paths and their values">
+	 * <table>
+	 * <caption>Paths that are present and their values</caption>
 	 * <tr>
 	 * <th>Path</th>
 	 * <th>Value</th>
@@ -228,8 +230,7 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static RequestFieldsSnippet relaxedRequestFields(
-			FieldDescriptor... descriptors) {
+	public static RequestFieldsSnippet relaxedRequestFields(FieldDescriptor... descriptors) {
 		return relaxedRequestFields(Arrays.asList(descriptors));
 	}
 
@@ -244,8 +245,7 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static RequestFieldsSnippet relaxedRequestFields(
-			List<FieldDescriptor> descriptors) {
+	public static RequestFieldsSnippet relaxedRequestFields(List<FieldDescriptor> descriptors) {
 		return new RequestFieldsSnippet(descriptors, true);
 	}
 
@@ -271,8 +271,7 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static RequestFieldsSnippet requestFields(Map<String, Object> attributes,
-			FieldDescriptor... descriptors) {
+	public static RequestFieldsSnippet requestFields(Map<String, Object> attributes, FieldDescriptor... descriptors) {
 		return requestFields(attributes, Arrays.asList(descriptors));
 	}
 
@@ -316,8 +315,8 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static RequestFieldsSnippet relaxedRequestFields(
-			Map<String, Object> attributes, FieldDescriptor... descriptors) {
+	public static RequestFieldsSnippet relaxedRequestFields(Map<String, Object> attributes,
+			FieldDescriptor... descriptors) {
 		return relaxedRequestFields(attributes, Arrays.asList(descriptors));
 	}
 
@@ -334,8 +333,8 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static RequestFieldsSnippet relaxedRequestFields(
-			Map<String, Object> attributes, List<FieldDescriptor> descriptors) {
+	public static RequestFieldsSnippet relaxedRequestFields(Map<String, Object> attributes,
+			List<FieldDescriptor> descriptors) {
 		return new RequestFieldsSnippet(descriptors, attributes, true);
 	}
 
@@ -364,8 +363,7 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static RequestFieldsSnippet requestFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static RequestFieldsSnippet requestFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			FieldDescriptor... descriptors) {
 		return requestFields(subsectionExtractor, Arrays.asList(descriptors));
 	}
@@ -395,8 +393,7 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static RequestFieldsSnippet requestFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static RequestFieldsSnippet requestFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			List<FieldDescriptor> descriptors) {
 		return new RequestFieldsSnippet(subsectionExtractor, descriptors);
 	}
@@ -416,8 +413,7 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static RequestFieldsSnippet relaxedRequestFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static RequestFieldsSnippet relaxedRequestFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			FieldDescriptor... descriptors) {
 		return relaxedRequestFields(subsectionExtractor, Arrays.asList(descriptors));
 	}
@@ -437,8 +433,7 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static RequestFieldsSnippet relaxedRequestFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static RequestFieldsSnippet relaxedRequestFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			List<FieldDescriptor> descriptors) {
 		return new RequestFieldsSnippet(subsectionExtractor, descriptors, true);
 	}
@@ -470,8 +465,7 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static RequestFieldsSnippet requestFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static RequestFieldsSnippet requestFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			Map<String, Object> attributes, FieldDescriptor... descriptors) {
 		return requestFields(subsectionExtractor, attributes, Arrays.asList(descriptors));
 	}
@@ -503,8 +497,7 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static RequestFieldsSnippet requestFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static RequestFieldsSnippet requestFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			Map<String, Object> attributes, List<FieldDescriptor> descriptors) {
 		return new RequestFieldsSnippet(subsectionExtractor, descriptors, attributes);
 	}
@@ -526,11 +519,9 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static RequestFieldsSnippet relaxedRequestFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static RequestFieldsSnippet relaxedRequestFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			Map<String, Object> attributes, FieldDescriptor... descriptors) {
-		return relaxedRequestFields(subsectionExtractor, attributes,
-				Arrays.asList(descriptors));
+		return relaxedRequestFields(subsectionExtractor, attributes, Arrays.asList(descriptors));
 	}
 
 	/**
@@ -550,11 +541,9 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static RequestFieldsSnippet relaxedRequestFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static RequestFieldsSnippet relaxedRequestFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			Map<String, Object> attributes, List<FieldDescriptor> descriptors) {
-		return new RequestFieldsSnippet(subsectionExtractor, descriptors, attributes,
-				true);
+		return new RequestFieldsSnippet(subsectionExtractor, descriptors, attributes, true);
 	}
 
 	/**
@@ -581,8 +570,7 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static RequestPartFieldsSnippet requestPartFields(String part,
-			FieldDescriptor... descriptors) {
+	public static RequestPartFieldsSnippet requestPartFields(String part, FieldDescriptor... descriptors) {
 		return requestPartFields(part, Arrays.asList(descriptors));
 	}
 
@@ -609,8 +597,7 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static RequestPartFieldsSnippet requestPartFields(String part,
-			List<FieldDescriptor> descriptors) {
+	public static RequestPartFieldsSnippet requestPartFields(String part, List<FieldDescriptor> descriptors) {
 		return new RequestPartFieldsSnippet(part, descriptors);
 	}
 
@@ -627,8 +614,7 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static RequestPartFieldsSnippet relaxedRequestPartFields(String part,
-			FieldDescriptor... descriptors) {
+	public static RequestPartFieldsSnippet relaxedRequestPartFields(String part, FieldDescriptor... descriptors) {
 		return relaxedRequestPartFields(part, Arrays.asList(descriptors));
 	}
 
@@ -645,8 +631,7 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static RequestPartFieldsSnippet relaxedRequestPartFields(String part,
-			List<FieldDescriptor> descriptors) {
+	public static RequestPartFieldsSnippet relaxedRequestPartFields(String part, List<FieldDescriptor> descriptors) {
 		return new RequestPartFieldsSnippet(part, descriptors, true);
 	}
 
@@ -675,8 +660,8 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static RequestPartFieldsSnippet requestPartFields(String part,
-			Map<String, Object> attributes, FieldDescriptor... descriptors) {
+	public static RequestPartFieldsSnippet requestPartFields(String part, Map<String, Object> attributes,
+			FieldDescriptor... descriptors) {
 		return requestPartFields(part, attributes, Arrays.asList(descriptors));
 	}
 
@@ -705,8 +690,8 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static RequestPartFieldsSnippet requestPartFields(String part,
-			Map<String, Object> attributes, List<FieldDescriptor> descriptors) {
+	public static RequestPartFieldsSnippet requestPartFields(String part, Map<String, Object> attributes,
+			List<FieldDescriptor> descriptors) {
 		return new RequestPartFieldsSnippet(part, descriptors, attributes);
 	}
 
@@ -725,8 +710,8 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static RequestPartFieldsSnippet relaxedRequestPartFields(String part,
-			Map<String, Object> attributes, FieldDescriptor... descriptors) {
+	public static RequestPartFieldsSnippet relaxedRequestPartFields(String part, Map<String, Object> attributes,
+			FieldDescriptor... descriptors) {
 		return relaxedRequestPartFields(part, attributes, Arrays.asList(descriptors));
 	}
 
@@ -745,8 +730,8 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static RequestPartFieldsSnippet relaxedRequestPartFields(String part,
-			Map<String, Object> attributes, List<FieldDescriptor> descriptors) {
+	public static RequestPartFieldsSnippet relaxedRequestPartFields(String part, Map<String, Object> attributes,
+			List<FieldDescriptor> descriptors) {
 		return new RequestPartFieldsSnippet(part, descriptors, attributes, true);
 	}
 
@@ -778,8 +763,7 @@ public abstract class PayloadDocumentation {
 	 * @see #beneathPath(String)
 	 */
 	public static RequestPartFieldsSnippet requestPartFields(String part,
-			PayloadSubsectionExtractor<?> subsectionExtractor,
-			FieldDescriptor... descriptors) {
+			PayloadSubsectionExtractor<?> subsectionExtractor, FieldDescriptor... descriptors) {
 		return requestPartFields(part, subsectionExtractor, Arrays.asList(descriptors));
 	}
 
@@ -811,8 +795,7 @@ public abstract class PayloadDocumentation {
 	 * @see #beneathPath(String)
 	 */
 	public static RequestPartFieldsSnippet requestPartFields(String part,
-			PayloadSubsectionExtractor<?> subsectionExtractor,
-			List<FieldDescriptor> descriptors) {
+			PayloadSubsectionExtractor<?> subsectionExtractor, List<FieldDescriptor> descriptors) {
 		return new RequestPartFieldsSnippet(part, subsectionExtractor, descriptors);
 	}
 
@@ -834,10 +817,8 @@ public abstract class PayloadDocumentation {
 	 * @see #beneathPath(String)
 	 */
 	public static RequestPartFieldsSnippet relaxedRequestPartFields(String part,
-			PayloadSubsectionExtractor<?> subsectionExtractor,
-			FieldDescriptor... descriptors) {
-		return relaxedRequestPartFields(part, subsectionExtractor,
-				Arrays.asList(descriptors));
+			PayloadSubsectionExtractor<?> subsectionExtractor, FieldDescriptor... descriptors) {
+		return relaxedRequestPartFields(part, subsectionExtractor, Arrays.asList(descriptors));
 	}
 
 	/**
@@ -858,8 +839,7 @@ public abstract class PayloadDocumentation {
 	 * @see #beneathPath(String)
 	 */
 	public static RequestPartFieldsSnippet relaxedRequestPartFields(String part,
-			PayloadSubsectionExtractor<?> subsectionExtractor,
-			List<FieldDescriptor> descriptors) {
+			PayloadSubsectionExtractor<?> subsectionExtractor, List<FieldDescriptor> descriptors) {
 		return new RequestPartFieldsSnippet(part, subsectionExtractor, descriptors, true);
 	}
 
@@ -893,10 +873,9 @@ public abstract class PayloadDocumentation {
 	 * @see #beneathPath(String)
 	 */
 	public static RequestPartFieldsSnippet requestPartFields(String part,
-			PayloadSubsectionExtractor<?> subsectionExtractor,
-			Map<String, Object> attributes, FieldDescriptor... descriptors) {
-		return requestPartFields(part, subsectionExtractor, attributes,
-				Arrays.asList(descriptors));
+			PayloadSubsectionExtractor<?> subsectionExtractor, Map<String, Object> attributes,
+			FieldDescriptor... descriptors) {
+		return requestPartFields(part, subsectionExtractor, attributes, Arrays.asList(descriptors));
 	}
 
 	/**
@@ -929,10 +908,9 @@ public abstract class PayloadDocumentation {
 	 * @see #beneathPath(String)
 	 */
 	public static RequestPartFieldsSnippet requestPartFields(String part,
-			PayloadSubsectionExtractor<?> subsectionExtractor,
-			Map<String, Object> attributes, List<FieldDescriptor> descriptors) {
-		return new RequestPartFieldsSnippet(part, subsectionExtractor, descriptors,
-				attributes);
+			PayloadSubsectionExtractor<?> subsectionExtractor, Map<String, Object> attributes,
+			List<FieldDescriptor> descriptors) {
+		return new RequestPartFieldsSnippet(part, subsectionExtractor, descriptors, attributes);
 	}
 
 	/**
@@ -955,10 +933,9 @@ public abstract class PayloadDocumentation {
 	 * @see #beneathPath(String)
 	 */
 	public static RequestPartFieldsSnippet relaxedRequestPartFields(String part,
-			PayloadSubsectionExtractor<?> subsectionExtractor,
-			Map<String, Object> attributes, FieldDescriptor... descriptors) {
-		return relaxedRequestPartFields(part, subsectionExtractor, attributes,
-				Arrays.asList(descriptors));
+			PayloadSubsectionExtractor<?> subsectionExtractor, Map<String, Object> attributes,
+			FieldDescriptor... descriptors) {
+		return relaxedRequestPartFields(part, subsectionExtractor, attributes, Arrays.asList(descriptors));
 	}
 
 	/**
@@ -981,10 +958,9 @@ public abstract class PayloadDocumentation {
 	 * @see #beneathPath(String)
 	 */
 	public static RequestPartFieldsSnippet relaxedRequestPartFields(String part,
-			PayloadSubsectionExtractor<?> subsectionExtractor,
-			Map<String, Object> attributes, List<FieldDescriptor> descriptors) {
-		return new RequestPartFieldsSnippet(part, subsectionExtractor, descriptors,
-				attributes, true);
+			PayloadSubsectionExtractor<?> subsectionExtractor, Map<String, Object> attributes,
+			List<FieldDescriptor> descriptors) {
+		return new RequestPartFieldsSnippet(part, subsectionExtractor, descriptors, attributes, true);
 	}
 
 	/**
@@ -1035,8 +1011,7 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static ResponseFieldsSnippet responseFields(
-			List<FieldDescriptor> descriptors) {
+	public static ResponseFieldsSnippet responseFields(List<FieldDescriptor> descriptors) {
 		return new ResponseFieldsSnippet(descriptors);
 	}
 
@@ -1054,8 +1029,7 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static ResponseFieldsSnippet relaxedResponseFields(
-			FieldDescriptor... descriptors) {
+	public static ResponseFieldsSnippet relaxedResponseFields(FieldDescriptor... descriptors) {
 		return relaxedResponseFields(Arrays.asList(descriptors));
 	}
 
@@ -1071,8 +1045,7 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static ResponseFieldsSnippet relaxedResponseFields(
-			List<FieldDescriptor> descriptors) {
+	public static ResponseFieldsSnippet relaxedResponseFields(List<FieldDescriptor> descriptors) {
 		return new ResponseFieldsSnippet(descriptors, true);
 	}
 
@@ -1098,8 +1071,7 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static ResponseFieldsSnippet responseFields(Map<String, Object> attributes,
-			FieldDescriptor... descriptors) {
+	public static ResponseFieldsSnippet responseFields(Map<String, Object> attributes, FieldDescriptor... descriptors) {
 		return responseFields(attributes, Arrays.asList(descriptors));
 	}
 
@@ -1143,8 +1115,8 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static ResponseFieldsSnippet relaxedResponseFields(
-			Map<String, Object> attributes, FieldDescriptor... descriptors) {
+	public static ResponseFieldsSnippet relaxedResponseFields(Map<String, Object> attributes,
+			FieldDescriptor... descriptors) {
 		return relaxedResponseFields(attributes, Arrays.asList(descriptors));
 	}
 
@@ -1161,8 +1133,8 @@ public abstract class PayloadDocumentation {
 	 * @see #fieldWithPath(String)
 	 * @see #subsectionWithPath(String)
 	 */
-	public static ResponseFieldsSnippet relaxedResponseFields(
-			Map<String, Object> attributes, List<FieldDescriptor> descriptors) {
+	public static ResponseFieldsSnippet relaxedResponseFields(Map<String, Object> attributes,
+			List<FieldDescriptor> descriptors) {
 		return new ResponseFieldsSnippet(descriptors, attributes, true);
 	}
 
@@ -1192,8 +1164,7 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static ResponseFieldsSnippet responseFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static ResponseFieldsSnippet responseFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			FieldDescriptor... descriptors) {
 		return responseFields(subsectionExtractor, Arrays.asList(descriptors));
 	}
@@ -1224,8 +1195,7 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static ResponseFieldsSnippet responseFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static ResponseFieldsSnippet responseFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			List<FieldDescriptor> descriptors) {
 		return new ResponseFieldsSnippet(subsectionExtractor, descriptors);
 	}
@@ -1246,8 +1216,7 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static ResponseFieldsSnippet relaxedResponseFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static ResponseFieldsSnippet relaxedResponseFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			FieldDescriptor... descriptors) {
 		return relaxedResponseFields(subsectionExtractor, Arrays.asList(descriptors));
 	}
@@ -1268,8 +1237,7 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static ResponseFieldsSnippet relaxedResponseFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static ResponseFieldsSnippet relaxedResponseFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			List<FieldDescriptor> descriptors) {
 		return new ResponseFieldsSnippet(subsectionExtractor, descriptors, true);
 	}
@@ -1302,11 +1270,9 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static ResponseFieldsSnippet responseFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static ResponseFieldsSnippet responseFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			Map<String, Object> attributes, FieldDescriptor... descriptors) {
-		return responseFields(subsectionExtractor, attributes,
-				Arrays.asList(descriptors));
+		return responseFields(subsectionExtractor, attributes, Arrays.asList(descriptors));
 	}
 
 	/**
@@ -1337,8 +1303,7 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static ResponseFieldsSnippet responseFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static ResponseFieldsSnippet responseFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			Map<String, Object> attributes, List<FieldDescriptor> descriptors) {
 		return new ResponseFieldsSnippet(subsectionExtractor, descriptors, attributes);
 	}
@@ -1361,11 +1326,9 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static ResponseFieldsSnippet relaxedResponseFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static ResponseFieldsSnippet relaxedResponseFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			Map<String, Object> attributes, FieldDescriptor... descriptors) {
-		return relaxedResponseFields(subsectionExtractor, attributes,
-				Arrays.asList(descriptors));
+		return relaxedResponseFields(subsectionExtractor, attributes, Arrays.asList(descriptors));
 	}
 
 	/**
@@ -1386,11 +1349,9 @@ public abstract class PayloadDocumentation {
 	 * @see #subsectionWithPath(String)
 	 * @see #beneathPath(String)
 	 */
-	public static ResponseFieldsSnippet relaxedResponseFields(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static ResponseFieldsSnippet relaxedResponseFields(PayloadSubsectionExtractor<?> subsectionExtractor,
 			Map<String, Object> attributes, List<FieldDescriptor> descriptors) {
-		return new ResponseFieldsSnippet(subsectionExtractor, descriptors, attributes,
-				true);
+		return new ResponseFieldsSnippet(subsectionExtractor, descriptors, attributes, true);
 	}
 
 	/**
@@ -1420,8 +1381,7 @@ public abstract class PayloadDocumentation {
 	 * @param subsectionExtractor the subsection extractor
 	 * @return the snippet that will document the request body subsection
 	 */
-	public static RequestBodySnippet requestBody(
-			PayloadSubsectionExtractor<?> subsectionExtractor) {
+	public static RequestBodySnippet requestBody(PayloadSubsectionExtractor<?> subsectionExtractor) {
 		return new RequestBodySnippet(subsectionExtractor);
 	}
 
@@ -1434,8 +1394,7 @@ public abstract class PayloadDocumentation {
 	 * @param attributes the attributes
 	 * @return the snippet that will document the request body subsection
 	 */
-	public static RequestBodySnippet requestBody(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static RequestBodySnippet requestBody(PayloadSubsectionExtractor<?> subsectionExtractor,
 			Map<String, Object> attributes) {
 		return new RequestBodySnippet(subsectionExtractor, attributes);
 	}
@@ -1467,8 +1426,7 @@ public abstract class PayloadDocumentation {
 	 * @param subsectionExtractor the subsection extractor
 	 * @return the snippet that will document the response body subsection
 	 */
-	public static ResponseBodySnippet responseBody(
-			PayloadSubsectionExtractor<?> subsectionExtractor) {
+	public static ResponseBodySnippet responseBody(PayloadSubsectionExtractor<?> subsectionExtractor) {
 		return new ResponseBodySnippet(subsectionExtractor);
 	}
 
@@ -1481,8 +1439,7 @@ public abstract class PayloadDocumentation {
 	 * @param attributes the attributes
 	 * @return the snippet that will document the response body subsection
 	 */
-	public static ResponseBodySnippet responseBody(
-			PayloadSubsectionExtractor<?> subsectionExtractor,
+	public static ResponseBodySnippet responseBody(PayloadSubsectionExtractor<?> subsectionExtractor,
 			Map<String, Object> attributes) {
 		return new ResponseBodySnippet(subsectionExtractor, attributes);
 	}
@@ -1505,8 +1462,7 @@ public abstract class PayloadDocumentation {
 	 * @param attributes the attributes
 	 * @return the snippet that will document the response body
 	 */
-	public static RequestPartBodySnippet requestPartBody(String partName,
-			Map<String, Object> attributes) {
+	public static RequestPartBodySnippet requestPartBody(String partName, Map<String, Object> attributes) {
 		return new RequestPartBodySnippet(partName, attributes);
 	}
 
@@ -1534,8 +1490,7 @@ public abstract class PayloadDocumentation {
 	 * @return the snippet that will document the response body
 	 */
 	public static RequestPartBodySnippet requestPartBody(String partName,
-			PayloadSubsectionExtractor<?> subsectionExtractor,
-			Map<String, Object> attributes) {
+			PayloadSubsectionExtractor<?> subsectionExtractor, Map<String, Object> attributes) {
 		return new RequestPartBodySnippet(partName, subsectionExtractor, attributes);
 	}
 
@@ -1546,16 +1501,13 @@ public abstract class PayloadDocumentation {
 	 * @param descriptors the descriptors to copy
 	 * @return the copied descriptors with the prefix applied
 	 */
-	public static List<FieldDescriptor> applyPathPrefix(String pathPrefix,
-			List<FieldDescriptor> descriptors) {
+	public static List<FieldDescriptor> applyPathPrefix(String pathPrefix, List<FieldDescriptor> descriptors) {
 		List<FieldDescriptor> prefixedDescriptors = new ArrayList<>();
 		for (FieldDescriptor descriptor : descriptors) {
 			String prefixedPath = pathPrefix + descriptor.getPath();
 			FieldDescriptor prefixedDescriptor = (descriptor instanceof SubsectionDescriptor)
-					? new SubsectionDescriptor(prefixedPath)
-					: new FieldDescriptor(prefixedPath);
-			prefixedDescriptor.description(descriptor.getDescription())
-					.type(descriptor.getType())
+					? new SubsectionDescriptor(prefixedPath) : new FieldDescriptor(prefixedPath);
+			prefixedDescriptor.description(descriptor.getDescription()).type(descriptor.getType())
 					.attributes(asArray(descriptor.getAttributes()));
 			if (descriptor.isIgnored()) {
 				prefixedDescriptor.ignored();
@@ -1582,8 +1534,7 @@ public abstract class PayloadDocumentation {
 	private static Attribute[] asArray(Map<String, Object> attributeMap) {
 		List<Attributes.Attribute> attributes = new ArrayList<>();
 		for (Map.Entry<String, Object> attribute : attributeMap.entrySet()) {
-			attributes
-					.add(Attributes.key(attribute.getKey()).value(attribute.getValue()));
+			attributes.add(Attributes.key(attribute.getKey()).value(attribute.getValue()));
 		}
 		return attributes.toArray(new Attribute[attributes.size()]);
 	}
